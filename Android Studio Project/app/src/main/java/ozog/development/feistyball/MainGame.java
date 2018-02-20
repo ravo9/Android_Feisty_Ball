@@ -1,7 +1,9 @@
 package ozog.development.feistyball;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,15 +15,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainGame extends AppCompatActivity implements SensorEventListener {
 
-    ImageView ball;
-    Button btnCenter;
+    public static RelativeLayout rl;
+    public static Context c;
+
+    static ImageView ball;
+    static ImageView destination;
+
+    static Button btnCenter;
+    static Button btnNewGame;
 
     Timer timer;
     Handler handler;
@@ -42,19 +53,25 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     float[] rotationMatrix;
     float[] orientationValues;
 
+    static Drawable brickImage;
+    static ImageView brick;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
 
+        rl = findViewById(R.id.RelativeLayout1);
+        c = getApplicationContext();
+
         screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
         ball = findViewById(R.id.ball);
-        btnCenter = findViewById(R.id.btnCenter);
+        destination = findViewById(R.id.destination);
 
-        ball.setX( (float)screenWidth/ 2.0f - 50 );
-        ball.setY( (float)screenHeight/ 2.0f - 50 );
+        btnCenter = findViewById(R.id.btnCenter);
+        btnNewGame = findViewById(R.id.btnNewGame);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorAccelerometer = sensorManager.getDefaultSensor(
@@ -66,9 +83,15 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         handler = new Handler();
 
-        Database.createDatabase();
-        DatabaseHandler x = new DatabaseHandler(this);
+        try {
+            InputStream stream = getAssets().open("brick.png");
+            brickImage = Drawable.createFromStream(stream, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        brick = new ImageView(this);
+        brick.setImageDrawable(brickImage);
     }
 
     @Override
@@ -97,6 +120,10 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     }
 
     public void newGame(View v) {
+
+        btnNewGame.setVisibility(View.INVISIBLE);
+
+        Level.setLevel1();
 
         timer = new Timer();
 

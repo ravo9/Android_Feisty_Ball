@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ozog.development.feistyball.MainGame">
 
     <ImageView
         android:id="@+id/ball"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200px"
+        android:layout_height="200px"
         android:layout_alignBottom="@+id/btnNewGame"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="114dp"
@@ -42,9 +43,9 @@
         tools:layout_editor_absoluteY="470dp" />
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/destination"
+        android:layout_width="220px"
+        android:layout_height="220px"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="19dp"
