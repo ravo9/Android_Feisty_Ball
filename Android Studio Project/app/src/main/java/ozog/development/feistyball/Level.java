@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -17,20 +19,17 @@ public class Level {
     private static float[] ballPosition;
     private static float[] destinationPosition;
 
-    private static float screenWidth;
-    private static float screenHeight;
-
+    private static int screenWidth;
+    private static int screenHeight;
 
 
     static {
 
-        screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        screenWidth = MainGame.screenWidth;
+        screenHeight = MainGame.screenHeight;
 
         ballPosition = new float[2];
         destinationPosition = new float[2];
-
-
 
     }
 
@@ -44,9 +43,20 @@ public class Level {
         destinationPosition[1] = (float) (screenHeight * 0.1);
         setDestinationPosition(destinationPosition[0], destinationPosition[1]);
 
-        game.addBrick(0, (float) (screenHeight * 0.26));
-        game.addBrick(300, (float) (screenHeight * 0.26));
-        game.addBrick(600, (float) (screenHeight * 0.26));
+        game.addBrick(10, (int) (screenHeight * 0.26));
+        game.addBrick((int)(screenWidth * 0.2 + 20), (int) (screenHeight * 0.26));
+        game.addBrick((int)(screenWidth * 0.4 + 40), (int) (screenHeight * 0.26));
+        game.addBrick((int)(screenWidth * 0.8 - 10), (int) (screenHeight * 0.26));
+
+        game.addBrick((int)(screenWidth * 0.2 - 70), (int) (screenHeight * 0.40));
+        game.addBrick((int)(screenWidth * 0.4 - 50), (int) (screenHeight * 0.40));
+        game.addBrick((int)(screenWidth * 0.6 - 30), (int) (screenHeight * 0.40));
+        game.addBrick((int)(screenWidth * 0.8 - 10), (int) (screenHeight * 0.40));
+
+
+        game.addPropeller((int)(screenWidth * 0.10), (int) (screenHeight * 0.1));
+        game.addPropeller((int)(screenWidth * 0.70), (int) (screenHeight * 0.50));
+        game.addPropeller((int)(screenWidth * 0.20), (int) (screenHeight * 0.90));
 
     }
 

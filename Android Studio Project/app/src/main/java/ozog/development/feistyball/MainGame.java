@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -35,14 +37,14 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     static Button btnCenter;
     static Button btnNewGame;
 
-
     static Drawable brickImage;
+    static Drawable propellerImage;
 
     Timer timer;
     Handler handler;
 
-    int screenWidth;
-    int screenHeight;
+    public static int screenWidth;
+    public static int screenHeight;
 
     float[] mAccelerometerData = new float[3];
     float[] mMagnetometerData = new float[3];
@@ -58,6 +60,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     float[] orientationValues;
 
     static ArrayList<Obstacle> obstacles;
+    static public ArrayList<Propeller> propellers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         btnCenter = findViewById(R.id.btnCenter);
         btnNewGame = findViewById(R.id.btnNewGame);
 
+
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorAccelerometer = sensorManager.getDefaultSensor(
                 Sensor.TYPE_ACCELEROMETER);
@@ -89,11 +94,27 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         try {
             InputStream stream = getAssets().open("brick.png");
             brickImage = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("propeller.png");
+            propellerImage = Drawable.createFromStream(stream, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         obstacles = new ArrayList<>();
+        propellers = new ArrayList<>();
+
+        ball.setMinimumWidth(180);
+        ball.setMinimumHeight(180);
+        ball.setMaxWidth(180);
+        ball.setMaxHeight(180);
+
+
+        // Animation code taken from StackOverflow
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(4000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        destination.setAnimation(rotate);
     }
 
     @Override
@@ -146,17 +167,36 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     public void update() {
 
+        float currentX = ball.getX();
+        float currentY = ball.getY();
+
         float newX = ball.getX() + orientationValues[2] * 10;
         float newY = ball.getY() - orientationValues[1] * 10;
 
+        // Check if is there any obstacle (e.g. brick)
         if (isObstacleArea(newX, newY) == false) {
             ball.setX( newX );
             ball.setY( newY );
-        } else if (isObstacleArea(newX, ball.getY()) == false) {
+        } else if (isObstacleArea(newX, currentY) == false) {
             ball.setX( newX );
-        } else if (isObstacleArea(ball.getX(), newY) == false) {
+        } else if (isObstacleArea(currentX, newY) == false) {
             ball.setY(newY);
         }
+
+        // Check if is there a propeller
+
+        float ballCenterPointX = currentX + 45;
+        float ballCenterPointY = currentY + 45;
+
+        for (Propeller p: propellers) {
+            if (ballCenterPointX > p.getCenterX() - 30 && ballCenterPointX < p.getCenterX() + 30) {
+                if (ballCenterPointY > p.getCenterY() - 30 && ballCenterPointY < p.getCenterY() + 30) {
+                    if (p.switchedOn() == false)
+                        p.switchOn();
+                }
+            }
+        }
+
     }
 
     @Override
@@ -191,8 +231,10 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     public boolean isObstacleArea(float x, float y) {
 
+        // x and y are left top corner of the ball image
+
         for (Obstacle o: obstacles) {
-            if (collides(x, y, o))
+            if (collides(x + 90, y + 90, o))
                 return true;
         }
 
@@ -204,13 +246,13 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     private boolean collides(float ballX, float ballY, Obstacle o) {
 
         float closestX = clamp(ballX, o.getOriginX(), o.getOriginX() + o.getWidth());
-        float closestY = clamp(ballY, o.getOriginY() - o.getHeight(), o.getOriginY());
+        float closestY = clamp(ballY, o.getOriginY(), o.getHeight() + o.getOriginY());
 
         float distanceX = ballX - closestX;
         float distanceY = ballY - closestY;
 
         // 100 is a ball radius
-        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) <= Math.pow(100, 2);
+        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(90, 2);
     }
 
     // 'The coding daddy' function
@@ -224,23 +266,43 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         return x;
     }
 
-    public void addBrick(float x, float y) {
+    public void addBrick(int x, int y) {
 
         ImageView brick = new ImageView(this);
         brick.setImageDrawable(brickImage);
 
         // Change to relative
-        int brickWidth = 300;
-        int brickHeight = 100;
+        int brickWidth = (int)(screenWidth * 0.2);
+        int brickHeight = (int)(brickWidth * 0.25);
 
-        brick.setMinimumWidth(brickWidth);
         brick.setMinimumHeight(brickHeight);
+        brick.setMinimumWidth(brickWidth);
 
         rl.addView(brick);
 
         brick.setX(x);
         brick.setY(y);
 
-        obstacles.add(new Obstacle((int)x, (int)y, brickWidth, brickHeight));
+        obstacles.add(new Obstacle(x, y, brickWidth, brickHeight));
+    }
+
+    public void addPropeller(int x, int y) {
+
+        ImageView propeller = new ImageView(this);
+
+        propeller.setImageDrawable(propellerImage);
+
+        int propellerLength = (int)(screenWidth * 0.12);
+
+        propeller.setMinimumHeight(propellerLength);
+        propeller.setMinimumWidth(propellerLength);
+
+        propeller.setX(x);
+        propeller.setY(y);
+
+        rl.addView(propeller);
+
+
+        propellers.add(new Propeller(x, y, propellerLength, propeller));
     }
 }
