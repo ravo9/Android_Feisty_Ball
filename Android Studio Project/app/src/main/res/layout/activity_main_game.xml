@@ -14,7 +14,7 @@
         android:layout_alignBottom="@+id/btnNewGame"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="114dp"
-        app:srcCompat="@mipmap/ic_launcher_round"
+        app:srcCompat="@drawable/ball"
         tools:layout_editor_absoluteX="156dp"
         tools:layout_editor_absoluteY="224dp" />
 

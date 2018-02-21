@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class Level {
@@ -20,6 +21,7 @@ public class Level {
     private static float screenHeight;
 
 
+
     static {
 
         screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -28,9 +30,11 @@ public class Level {
         ballPosition = new float[2];
         destinationPosition = new float[2];
 
+
+
     }
 
-    public static void setLevel1() {
+    public static void setLevel1(MainGame game) {
 
         ballPosition[0] = (screenWidth / 2) - 100;
         ballPosition[1] = (float) (screenHeight * 0.7);
@@ -40,9 +44,9 @@ public class Level {
         destinationPosition[1] = (float) (screenHeight * 0.1);
         setDestinationPosition(destinationPosition[0], destinationPosition[1]);
 
-        addBrick(300, 300);
-        // Doesn't work with the second brick.
-        //addBrick(300, 500);
+        game.addBrick(0, (float) (screenHeight * 0.26));
+        game.addBrick(300, (float) (screenHeight * 0.26));
+        game.addBrick(600, (float) (screenHeight * 0.26));
 
     }
 
@@ -56,11 +60,5 @@ public class Level {
         MainGame.destination.setY(y);
     }
 
-    public static void addBrick(float x, float y) {
-        ImageView brick1 = MainGame.brick;
-        MainGame.rl.addView(brick1);
 
-        brick1.setX(x);
-        brick1.setY(y);
-    }
 }

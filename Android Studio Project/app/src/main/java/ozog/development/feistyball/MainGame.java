@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,6 +34,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     static Button btnCenter;
     static Button btnNewGame;
+
+
+    static Drawable brickImage;
 
     Timer timer;
     Handler handler;
@@ -53,8 +57,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     float[] rotationMatrix;
     float[] orientationValues;
 
-    static Drawable brickImage;
-    static ImageView brick;
+    static ArrayList<Obstacle> obstacles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +93,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             e.printStackTrace();
         }
 
-        brick = new ImageView(this);
-        brick.setImageDrawable(brickImage);
+        obstacles = new ArrayList<>();
     }
 
     @Override
@@ -123,7 +125,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         btnNewGame.setVisibility(View.INVISIBLE);
 
-        Level.setLevel1();
+        Level.setLevel1(this);
 
         timer = new Timer();
 
@@ -143,8 +145,18 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     }
 
     public void update() {
-        ball.setX( ball.getX() + orientationValues[2] * 10 );
-        ball.setY( ball.getY() - orientationValues[1] * 10 );
+
+        float newX = ball.getX() + orientationValues[2] * 10;
+        float newY = ball.getY() - orientationValues[1] * 10;
+
+        if (isObstacleArea(newX, newY) == false) {
+            ball.setX( newX );
+            ball.setY( newY );
+        } else if (isObstacleArea(newX, ball.getY()) == false) {
+            ball.setX( newX );
+        } else if (isObstacleArea(ball.getX(), newY) == false) {
+            ball.setY(newY);
+        }
     }
 
     @Override
@@ -173,5 +185,62 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+    }
+
+
+
+    public boolean isObstacleArea(float x, float y) {
+
+        for (Obstacle o: obstacles) {
+            if (collides(x, y, o))
+                return true;
+        }
+
+        return false;
+
+    }
+
+    // 'The coding daddy' function
+    private boolean collides(float ballX, float ballY, Obstacle o) {
+
+        float closestX = clamp(ballX, o.getOriginX(), o.getOriginX() + o.getWidth());
+        float closestY = clamp(ballY, o.getOriginY() - o.getHeight(), o.getOriginY());
+
+        float distanceX = ballX - closestX;
+        float distanceY = ballY - closestY;
+
+        // 100 is a ball radius
+        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) <= Math.pow(100, 2);
+    }
+
+    // 'The coding daddy' function
+    public static float clamp(float value, float min, float max) {
+        float x = value;
+        if (x < min) {
+            x = min;
+        } else if (x > max) {
+            x = max;
+        }
+        return x;
+    }
+
+    public void addBrick(float x, float y) {
+
+        ImageView brick = new ImageView(this);
+        brick.setImageDrawable(brickImage);
+
+        // Change to relative
+        int brickWidth = 300;
+        int brickHeight = 100;
+
+        brick.setMinimumWidth(brickWidth);
+        brick.setMinimumHeight(brickHeight);
+
+        rl.addView(brick);
+
+        brick.setX(x);
+        brick.setY(y);
+
+        obstacles.add(new Obstacle((int)x, (int)y, brickWidth, brickHeight));
     }
 }
