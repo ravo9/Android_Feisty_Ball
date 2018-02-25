@@ -2,7 +2,6 @@ package ozog.development.feistyball;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,35 +12,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainGame extends AppCompatActivity implements SensorEventListener {
 
-    public static RelativeLayout rl;
-    public static Context c;
+    public RelativeLayout rl;
+    public Context c;
 
-    static ImageView ball;
-    static ImageView destination;
+    public static ImageView ball;
+    public static ImageView destination;
 
-    static Button btnCenter;
-    static Button btnNewGame;
+    public Button btnNewGame;
+    public Button btnRestartLevel;
+    public Button btnNextLevel;
+    public FrameLayout windowLevelComplited;
 
     static Drawable brickImage;
     static Drawable propellerImage;
+    static Drawable destinationImage;
+    static Drawable destinationImageGrey;
 
     Timer timer;
     Handler handler;
+
+    public static int currentLevel;
 
     public static int screenWidth;
     public static int screenHeight;
@@ -50,7 +54,6 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     float[] mMagnetometerData = new float[3];
 
     int sensorType;
-
     SensorManager sensorManager;
     private Sensor mSensorAccelerometer;
     private Sensor mSensorMagnetometer;
@@ -76,10 +79,11 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         ball = findViewById(R.id.ball);
         destination = findViewById(R.id.destination);
 
-        btnCenter = findViewById(R.id.btnCenter);
         btnNewGame = findViewById(R.id.btnNewGame);
+        btnRestartLevel = findViewById(R.id.btnRestartLevel);
+        btnNextLevel = findViewById(R.id.btnNextLevel);
 
-
+        windowLevelComplited = findViewById(R.id.windowLevelComplited);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorAccelerometer = sensorManager.getDefaultSensor(
@@ -91,11 +95,16 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         handler = new Handler();
 
+        // Images upload.
         try {
             InputStream stream = getAssets().open("brick.png");
             brickImage = Drawable.createFromStream(stream, null);
             stream = getAssets().open("propeller.png");
             propellerImage = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("destination02.png");
+            destinationImage = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("destination02grey.png");
+            destinationImageGrey = Drawable.createFromStream(stream, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,18 +112,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
 
-        ball.setMinimumWidth(180);
-        ball.setMinimumHeight(180);
-        ball.setMaxWidth(180);
-        ball.setMaxHeight(180);
+        windowLevelComplited.animate().translationX(screenWidth);
 
-
-        // Animation code taken from StackOverflow
-        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(4000);
-        rotate.setRepeatCount(Animation.INFINITE);
-        destination.setAnimation(rotate);
     }
 
     @Override
@@ -137,17 +136,10 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
-    public void centerBall( View v ) {
-        ball.setX( (float)screenWidth/ 2.0f - 50 );
-        ball.setY( (float)screenHeight/ 2.0f - 50 );
-    }
-
     public void newGame(View v) {
 
         btnNewGame.setVisibility(View.INVISIBLE);
-
         Level.setLevel1(this);
-
         timer = new Timer();
 
         // Movement
@@ -162,6 +154,44 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
                 });
             }
         }, 0, 10);
+
+    }
+
+    public void restartLevel(View v) {
+
+        windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
+        windowLevelComplited.setVisibility(View.INVISIBLE);
+        windowLevelComplited.animate().translationX(screenWidth);
+
+        if (currentLevel == 1)
+            newGame(v);
+    }
+
+    public void levelComplited(View v) {
+
+        timer.cancel();
+        int animationTime = 2000;
+        ball.animate().alpha(0.0f).setDuration(animationTime);
+        destination.animate().alpha(0.0f).setDuration(animationTime);
+
+        for (Propeller p: propellers) {
+            p.getImage().animate().alpha(0.0f).setDuration(animationTime);
+        }
+
+        for (Obstacle o: obstacles) {
+            if (o.getImage() != null)
+                o.getImage().animate().alpha(0.0f).setDuration(animationTime);
+        }
+
+        /*try {
+            Thread.sleep(animationTime);
+        }
+        catch (Exception e) {
+            Log.e("Sleep exception", e.getMessage());
+        }*/
+
+        windowLevelComplited.setVisibility(View.VISIBLE);
+        windowLevelComplited.animate().translationX(0).setDuration(2000);
 
     }
 
@@ -184,19 +214,43 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         }
 
         // Check if is there a propeller
-
-        float ballCenterPointX = currentX + 45;
-        float ballCenterPointY = currentY + 45;
+        float ballCenterPointX = currentX + 90;
+        float ballCenterPointY = currentY + 90;
 
         for (Propeller p: propellers) {
-            if (ballCenterPointX > p.getCenterX() - 30 && ballCenterPointX < p.getCenterX() + 30) {
-                if (ballCenterPointY > p.getCenterY() - 30 && ballCenterPointY < p.getCenterY() + 30) {
-                    if (p.switchedOn() == false)
+            if (ballCenterPointX > p.getCenterX() - 50 && ballCenterPointX < p.getCenterX() + 50) {
+                if (ballCenterPointY > p.getCenterY() - 50 && ballCenterPointY < p.getCenterY() + 50) {
+                    if (!p.switchedOn())
                         p.switchOn();
                 }
             }
         }
 
+        // Update propellers rotation
+        for (Propeller p: propellers) {
+            if (p.switchedOn()) {
+                float currentPosition = p.getImage().getRotation();
+                p.getImage().setRotation(currentPosition + 1);
+            }
+        }
+
+        // Check if all propellers are switched on and the destination can be unlocked
+        boolean allSwitched = true;
+        for (Propeller p: propellers) {
+            if (!p.switchedOn()) {
+                allSwitched = false;
+            }
+        }
+        if (allSwitched == true) {
+            destination.setImageDrawable(destinationImage);
+            destination.setRotation(destination.getRotation() + (float)0.5);
+            // Check if the destination has been achieved.
+            if (ballCenterPointX > destination.getX() +  175 - 50 && ballCenterPointX < destination.getX() + 175 + 50) {
+                if (ballCenterPointY > destination.getY() + 175 - 50 && ballCenterPointY < destination.getY() + 175 +50) {
+                    levelComplited(rl);
+                }
+            }
+        }
     }
 
     @Override
@@ -234,7 +288,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         // x and y are left top corner of the ball image
 
         for (Obstacle o: obstacles) {
-            if (collides(x + 90, y + 90, o))
+            if (collides(x + 100, y + 100, o))
                 return true;
         }
 
@@ -252,7 +306,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         float distanceY = ballY - closestY;
 
         // 100 is a ball radius
-        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(90, 2);
+        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(100, 2);
     }
 
     // 'The coding daddy' function
@@ -264,6 +318,13 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             x = max;
         }
         return x;
+    }
+
+    public void addWalls() {
+        obstacles.add(new Obstacle(0, -1, screenWidth, 1, null));
+        obstacles.add(new Obstacle(screenWidth - 1, 0, 1, screenHeight, null));
+        obstacles.add(new Obstacle(0, screenHeight, screenWidth, 1, null));
+        obstacles.add(new Obstacle(-1, 0, 1, screenHeight, null));
     }
 
     public void addBrick(int x, int y) {
@@ -283,7 +344,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         brick.setX(x);
         brick.setY(y);
 
-        obstacles.add(new Obstacle(x, y, brickWidth, brickHeight));
+        obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
     }
 
     public void addPropeller(int x, int y) {
@@ -301,7 +362,6 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         propeller.setY(y);
 
         rl.addView(propeller);
-
 
         propellers.add(new Propeller(x, y, propellerLength, propeller));
     }

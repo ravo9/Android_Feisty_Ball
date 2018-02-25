@@ -2,6 +2,8 @@ package ozog.development.feistyball;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
@@ -16,9 +18,6 @@ import java.util.ArrayList;
 
 public class Level {
 
-    private static float[] ballPosition;
-    private static float[] destinationPosition;
-
     private static int screenWidth;
     private static int screenHeight;
 
@@ -27,21 +26,21 @@ public class Level {
 
         screenWidth = MainGame.screenWidth;
         screenHeight = MainGame.screenHeight;
-
-        ballPosition = new float[2];
-        destinationPosition = new float[2];
-
     }
 
     public static void setLevel1(MainGame game) {
 
-        ballPosition[0] = (screenWidth / 2) - 100;
-        ballPosition[1] = (float) (screenHeight * 0.7);
-        setBallPosition(ballPosition[0], ballPosition[1]);
+        game.currentLevel = 1;
 
-        destinationPosition[0] = (screenWidth / 2) - 110;
-        destinationPosition[1] = (float) (screenHeight * 0.1);
-        setDestinationPosition(destinationPosition[0], destinationPosition[1]);
+        float ballPositionX = (screenWidth / 2) - 100;
+        float ballPositionY = (float) (screenHeight * 0.7);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (screenWidth / 2 + 50);
+        float destinationPositionY = (float) (screenHeight * 0.055);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        game.addWalls();
 
         game.addBrick(10, (int) (screenHeight * 0.26));
         game.addBrick((int)(screenWidth * 0.2 + 20), (int) (screenHeight * 0.26));
@@ -52,7 +51,6 @@ public class Level {
         game.addBrick((int)(screenWidth * 0.4 - 50), (int) (screenHeight * 0.40));
         game.addBrick((int)(screenWidth * 0.6 - 30), (int) (screenHeight * 0.40));
         game.addBrick((int)(screenWidth * 0.8 - 10), (int) (screenHeight * 0.40));
-
 
         game.addPropeller((int)(screenWidth * 0.10), (int) (screenHeight * 0.1));
         game.addPropeller((int)(screenWidth * 0.70), (int) (screenHeight * 0.50));
@@ -66,9 +64,8 @@ public class Level {
     }
 
     public static void setDestinationPosition(float x, float y) {
+        MainGame.destination.setImageDrawable(MainGame.destinationImageGrey);
         MainGame.destination.setX(x);
         MainGame.destination.setY(y);
     }
-
-
 }

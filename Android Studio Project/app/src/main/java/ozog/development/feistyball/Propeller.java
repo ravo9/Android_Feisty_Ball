@@ -1,5 +1,6 @@
 package ozog.development.feistyball;
 
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -20,8 +21,6 @@ public class Propeller {
         length = l;
         switchedOn = false;
         image = img;
-
-        MainGame.propellers.add(this);
     }
 
     public int getOriginX() {
@@ -41,18 +40,11 @@ public class Propeller {
     }
 
     public void switchOn() {
-        // Animation code taken from StackOverflow
-        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(4000);
-        rotate.setRepeatCount(Animation.INFINITE);
-        image.setAnimation(rotate);
-
         switchedOn = true;
     }
 
     public boolean switchedOn() {
-       if (switchedOn == true)
+       if (switchedOn)
            return true;
        else
            return false;
