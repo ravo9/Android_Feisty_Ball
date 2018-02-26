@@ -11,9 +11,10 @@
         android:id="@+id/destination"
         android:layout_width="350px"
         android:layout_height="350px"
-        android:layout_above="@+id/ball"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="60dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/destination" />
 
@@ -22,20 +23,20 @@
         android:layout_width="200px"
         android:layout_height="200px"
         android:layout_above="@+id/btnNewGame"
-        android:layout_alignEnd="@+id/btnNewGame"
-        android:layout_marginBottom="74dp"
+        android:layout_marginBottom="67dp"
+        android:layout_toEndOf="@+id/destination"
         app:srcCompat="@drawable/ball"
         tools:layout_editor_absoluteX="156dp"
         tools:layout_editor_absoluteY="224dp" />
 
     <Button
         android:id="@+id/btnNewGame"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="148dp"
-        android:onClick="newGame"
+        android:onClick="nextLevel"
         android:text="New Game"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="470dp" />
@@ -45,53 +46,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="110dp"
         android:layout_marginLeft="75dp"
         android:layout_marginRight="75dp"
-        android:layout_marginTop="120dp"
-        android:background="@color/colorAccent"
+        android:layout_marginTop="110dp"
+        android:background="@drawable/inter_level_menu_bg"
         android:visibility="visible">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:text="Level completed!"
             android:textAlignment="center"
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/finalTotalTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
-            android:text="Level time: 00:00:00"
+            android:layout_marginTop="150dp"
+            android:text="Total time: 00:00:00"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/textView4"
+        <Button
+            android:id="@+id/btnRestartLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="160dp"
-            android:text="Total time: 00:00:00"
+            android:layout_marginTop="245dp"
+            android:onClick="restartLevel"
+            android:text="Restart Level" />
+
+        <Button
+            android:id="@+id/btnMainMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="295dp"
+            android:text="Main Menu" />
+
+        <TextView
+            android:id="@+id/finalLevelTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="115dp"
+            android:text="Level time: 00:00:00"
             android:textAlignment="center" />
 
         <Button
             android:id="@+id/btnNextLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="210dp"
+            android:layout_above="@+id/btnNewGame"
+            android:layout_alignStart="@+id/windowLevelComplited"
+            android:layout_marginTop="195dp"
+            android:onClick="nextLevel"
             android:text="Next level" />
 
-        <Button
-            android:id="@+id/btnRestartLevel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="270dp"
-            android:onClick="restartLevel"
-            android:text="Button" />
     </FrameLayout>
+
+    <Button
+        android:id="@+id/btnScores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btnNewGame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="59dp"
+        android:text="Best scores" />
+
+    <TextView
+        android:id="@+id/levelTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnScores"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:text="Level time: 00:00:00" />
+
+    <TextView
+        android:id="@+id/gameTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/levelTimer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="Game time: 00:00:00" />
 
 
 </RelativeLayout>

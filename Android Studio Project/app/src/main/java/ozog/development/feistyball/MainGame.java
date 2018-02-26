@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -35,6 +36,13 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     public Button btnNewGame;
     public Button btnRestartLevel;
     public Button btnNextLevel;
+    public Button btnScores;
+
+    public TextView gameTimer;
+    public TextView levelTimer;
+    public TextView finalLevelTime;
+    public TextView finalTotalTime;
+
     public FrameLayout windowLevelComplited;
 
     static Drawable brickImage;
@@ -62,6 +70,10 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     float[] rotationMatrix;
     float[] orientationValues;
 
+    // In centiseconds.
+    static int gameTime;
+    static int levelTime;
+
     static ArrayList<Obstacle> obstacles;
     static public ArrayList<Propeller> propellers;
 
@@ -82,6 +94,12 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         btnNewGame = findViewById(R.id.btnNewGame);
         btnRestartLevel = findViewById(R.id.btnRestartLevel);
         btnNextLevel = findViewById(R.id.btnNextLevel);
+        btnScores = findViewById(R.id.btnScores);
+
+        gameTimer = findViewById(R.id.gameTimer);
+        levelTimer = findViewById(R.id.levelTimer);
+        finalLevelTime = findViewById(R.id.finalLevelTime);
+        finalTotalTime = findViewById(R.id.finalTotalTime);
 
         windowLevelComplited = findViewById(R.id.windowLevelComplited);
 
@@ -112,6 +130,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
 
+        currentLevel = 0;
+
         windowLevelComplited.animate().translationX(screenWidth);
 
     }
@@ -136,10 +156,31 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
-    public void newGame(View v) {
+    public void nextLevel(View v) {
 
-        btnNewGame.setVisibility(View.INVISIBLE);
-        Level.setLevel1(this);
+        if (currentLevel == 0) {
+
+            gameTime = 0;
+            levelTime = 0;
+
+            btnNewGame.setVisibility(View.INVISIBLE);
+            btnScores.setVisibility(View.INVISIBLE);
+
+            currentLevel++;
+            Level.setLevel1(this);
+        }
+        else if (currentLevel == 1) {
+
+            levelTime = 0;
+
+            currentLevel++;
+            Level.setLevel2(this);
+        }
+
+        windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
+        windowLevelComplited.setVisibility(View.INVISIBLE);
+        windowLevelComplited.animate().translationX(screenWidth);
+
         timer = new Timer();
 
         // Movement
@@ -150,6 +191,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
                     @Override
                     public void run () {
                         update();
+                        updateTime();
                     }
                 });
             }
@@ -158,14 +200,41 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     }
 
     public void restartLevel(View v) {
-
-        windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
-        windowLevelComplited.setVisibility(View.INVISIBLE);
-        windowLevelComplited.animate().translationX(screenWidth);
-
-        if (currentLevel == 1)
-            newGame(v);
+        currentLevel--;
+        nextLevel(v);
     }
+
+    public void updateTime() {
+
+        levelTime++;
+        gameTime++;
+
+        levelTimer.setText("Level Time: " + displayTime(levelTime));
+        gameTimer.setText("Game Time: " + displayTime(gameTime));
+    }
+
+    public String displayTime(int time) {
+        int minutes = (int)time/6000;
+        int seconds = (int)(time - 6000 * minutes)/100;
+        int centiseconds = time - 6000 * minutes - 100 * seconds;
+
+        String min = Integer.toString(minutes);
+        if ( minutes < 10 )
+            min = "0" + min;
+
+        String sec = Integer.toString(seconds);
+        if ( seconds < 10 )
+            sec = "0" + sec;
+
+        String centsec = Integer.toString(centiseconds);
+        if ( centiseconds < 10 )
+            centsec = "0" + centsec;
+
+        return (min + ":" + sec + ":" + centsec);
+    }
+
+
+
 
     public void levelComplited(View v) {
 
@@ -183,15 +252,17 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
                 o.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
 
-        /*try {
-            Thread.sleep(animationTime);
-        }
-        catch (Exception e) {
-            Log.e("Sleep exception", e.getMessage());
-        }*/
-
         windowLevelComplited.setVisibility(View.VISIBLE);
         windowLevelComplited.animate().translationX(0).setDuration(2000);
+
+        finalLevelTime.setText("Level Time: " + displayTime(levelTime));
+        finalTotalTime.setText("Total Time: " + displayTime(gameTime));
+
+        // Clear level elements.
+        propellers.clear();
+        obstacles.clear();
+        ball.animate().cancel();
+        destination.animate().cancel();
 
     }
 

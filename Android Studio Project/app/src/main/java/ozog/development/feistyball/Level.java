@@ -1,20 +1,5 @@
 package ozog.development.feistyball;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
 
 public class Level {
 
@@ -29,8 +14,6 @@ public class Level {
     }
 
     public static void setLevel1(MainGame game) {
-
-        game.currentLevel = 1;
 
         float ballPositionX = (screenWidth / 2) - 100;
         float ballPositionY = (float) (screenHeight * 0.7);
@@ -57,6 +40,31 @@ public class Level {
         game.addPropeller((int)(screenWidth * 0.20), (int) (screenHeight * 0.90));
 
     }
+
+    public static void setLevel2(MainGame game) {
+
+        float ballPositionX = (float) (screenWidth * 0.8);
+        float ballPositionY = (float) (screenHeight * 0.2);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.15);
+        float destinationPositionY = (float) (screenHeight * 0.86);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        game.addWalls();
+
+        game.addBrick((int)(screenWidth * 0.45), (int) (screenHeight * 0.3));
+        game.addBrick((int)(screenWidth * 0.65 + 40), (int) (screenHeight * 0.3));
+
+        game.addBrick((int)(screenWidth * 0.75), (int) (screenHeight * 0.8));
+
+        game.addPropeller((int)(screenWidth * 0.60), (int) (screenHeight * 0.02));
+        game.addPropeller((int)(screenWidth * 0.02), (int) (screenHeight * 0.25));
+        game.addPropeller((int)(screenWidth * 0.85), (int) (screenHeight * 0.85));
+
+    }
+
+
 
     public static void setBallPosition(float x, float y) {
         MainGame.ball.setX(x);

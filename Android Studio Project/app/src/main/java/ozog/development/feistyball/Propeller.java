@@ -1,11 +1,6 @@
 package ozog.development.feistyball;
 
-import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
 
 public class Propeller {
 
