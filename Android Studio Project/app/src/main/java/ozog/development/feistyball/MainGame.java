@@ -32,6 +32,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     public static ImageView ball;
     public static ImageView destination;
+    public static ImageView blackHoleA;
+    public static ImageView blackHoleB;
+    public static ImageView bonus01;
 
     public Button btnNewGame;
     public Button btnRestartLevel;
@@ -45,13 +48,18 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     public FrameLayout windowLevelComplited;
 
-    static Drawable brickImage;
+    static Drawable brickImageHorizontal;
+    static Drawable brickImageVertical;
     static Drawable propellerImage;
     static Drawable destinationImage;
     static Drawable destinationImageGrey;
+    static Drawable blackHoleImage;
+    static Drawable bonus6SecondImage;
 
     Timer timer;
     Handler handler;
+
+    public static int blackHoleFreezer;
 
     public static int currentLevel;
 
@@ -76,6 +84,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     static ArrayList<Obstacle> obstacles;
     static public ArrayList<Propeller> propellers;
+    static ArrayList<BlackHole> blackHoles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +99,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         ball = findViewById(R.id.ball);
         destination = findViewById(R.id.destination);
+        blackHoleA = findViewById(R.id.blackHoleA);
+        blackHoleB = findViewById(R.id.blackHoleB);
+        bonus01 = findViewById(R.id.bonus01);
 
         btnNewGame = findViewById(R.id.btnNewGame);
         btnRestartLevel = findViewById(R.id.btnRestartLevel);
@@ -100,6 +112,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         levelTimer = findViewById(R.id.levelTimer);
         finalLevelTime = findViewById(R.id.finalLevelTime);
         finalTotalTime = findViewById(R.id.finalTotalTime);
+
+        blackHoleFreezer = 0;
 
         windowLevelComplited = findViewById(R.id.windowLevelComplited);
 
@@ -115,20 +129,27 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         // Images upload.
         try {
-            InputStream stream = getAssets().open("brick.png");
-            brickImage = Drawable.createFromStream(stream, null);
+            InputStream stream = getAssets().open("brick_h.png");
+            brickImageHorizontal = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("brick_v.png");
+            brickImageVertical = Drawable.createFromStream(stream, null);
             stream = getAssets().open("propeller.png");
             propellerImage = Drawable.createFromStream(stream, null);
             stream = getAssets().open("destination02.png");
             destinationImage = Drawable.createFromStream(stream, null);
             stream = getAssets().open("destination02grey.png");
             destinationImageGrey = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("bonus_6_sec.png");
+            bonus6SecondImage = Drawable.createFromStream(stream, null);
+            stream = getAssets().open("black_hole.png");
+            blackHoleImage = Drawable.createFromStream(stream, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
+        blackHoles = new ArrayList<>();
 
         currentLevel = 0;
 
@@ -159,23 +180,17 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     public void nextLevel(View v) {
 
         if (currentLevel == 0) {
-
             gameTime = 0;
-            levelTime = 0;
-
             btnNewGame.setVisibility(View.INVISIBLE);
             btnScores.setVisibility(View.INVISIBLE);
-
-            currentLevel++;
-            Level.setLevel1(this);
+            Level.setLevel4(this);
         }
         else if (currentLevel == 1) {
-
-            levelTime = 0;
-
-            currentLevel++;
             Level.setLevel2(this);
         }
+
+        levelTime = 0;
+        currentLevel++;
 
         windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
         windowLevelComplited.setVisibility(View.INVISIBLE);
@@ -274,7 +289,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         float newX = ball.getX() + orientationValues[2] * 10;
         float newY = ball.getY() - orientationValues[1] * 10;
 
-        // Check if is there any obstacle (e.g. brick)
+        // Check if there is any obstacle (e.g. brick)
         if (isObstacleArea(newX, newY) == false) {
             ball.setX( newX );
             ball.setY( newY );
@@ -284,7 +299,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             ball.setY(newY);
         }
 
-        // Check if is there a propeller
+        // Check if there is a propeller
         float ballCenterPointX = currentX + 90;
         float ballCenterPointY = currentY + 90;
 
@@ -294,6 +309,41 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
                     if (!p.switchedOn())
                         p.switchOn();
                 }
+            }
+        }
+
+        // Check if there is a black hole
+        if (blackHoleFreezer == 0) {
+            if (ballCenterPointX > blackHoleA.getX() + 120 - 50 && ballCenterPointX < blackHoleA.getX() + 120 + 50) {
+                if (ballCenterPointY > blackHoleA.getY() + 120 - 50 && ballCenterPointY < blackHoleA.getY() + 120 + 50) {
+                    ball.setX(blackHoleB.getX() + 30);
+                    ball.setY(blackHoleB.getY() + 30);
+                    // Freeze black hole per 3 seconds
+                    blackHoleFreezer = 300;
+                }
+            }
+
+            if (ballCenterPointX > blackHoleB.getX() + 120 - 50 && ballCenterPointX < blackHoleB.getX() + 120 + 50) {
+                if (ballCenterPointY > blackHoleB.getY() + 120 - 50 && ballCenterPointY < blackHoleB.getY() + 120 + 50) {
+                    ball.setX(blackHoleA.getX() + 30);
+                    ball.setY(blackHoleA.getY() + 30);
+                    // Freeze black hole per 3 seconds
+                    blackHoleFreezer = 300;
+                    //ball.animate().translationX(ball.getX() + 100).setDuration(400);
+                }
+            }
+        }
+        else
+            blackHoleFreezer--;
+
+
+        // Check if there is a bonus
+        if (ballCenterPointX > bonus01.getX() + 100 - 50 && ballCenterPointX < bonus01.getX() + 100 + 50) {
+            if (ballCenterPointY > bonus01.getY() + 100 - 50 && ballCenterPointY < bonus01.getY() + 100 + 50) {
+                gameTime -= 60;
+                levelTime -= 60;
+                Toast.makeText(getApplicationContext(), "-6 seconds!", Toast.LENGTH_SHORT).show();
+                bonus01.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -398,14 +448,23 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         obstacles.add(new Obstacle(-1, 0, 1, screenHeight, null));
     }
 
-    public void addBrick(int x, int y) {
+    public void addBrick(int x, int y, int orientation) {
 
         ImageView brick = new ImageView(this);
-        brick.setImageDrawable(brickImage);
 
-        // Change to relative
-        int brickWidth = (int)(screenWidth * 0.2);
-        int brickHeight = (int)(brickWidth * 0.25);
+        int brickWidth = 0;
+        int brickHeight = 0;
+
+        if (orientation == 0) {
+            brick.setImageDrawable(brickImageHorizontal);
+            brickWidth = (int)(screenWidth * 0.2);
+            brickHeight = (int)(brickWidth * 0.25);
+        }
+        else if (orientation == 1) {
+            brick.setImageDrawable(brickImageVertical);
+            brickHeight = (int)(screenWidth * 0.2);
+            brickWidth = (int)(brickHeight * 0.25);
+        }
 
         brick.setMinimumHeight(brickHeight);
         brick.setMinimumWidth(brickWidth);
@@ -436,4 +495,6 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         propellers.add(new Propeller(x, y, propellerLength, propeller));
     }
+
+
 }

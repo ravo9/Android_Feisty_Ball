@@ -118,8 +118,8 @@
         android:id="@+id/levelTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/btnScores"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp"
         android:text="Level time: 00:00:00" />
 
@@ -127,10 +127,38 @@
         android:id="@+id/gameTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/levelTimer"
         android:layout_below="@+id/levelTimer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:text="Game time: 00:00:00" />
+
+    <ImageView
+        android:id="@+id/blackHoleB"
+        android:layout_width="240px"
+        android:layout_height="240px"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/black_hole" />
+
+    <ImageView
+        android:id="@+id/blackHoleA"
+        android:layout_width="240px"
+        android:layout_height="240px"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="11dp"
+        android:layout_toStartOf="@+id/blackHoleB"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/black_hole" />
+
+    <ImageView
+        android:id="@+id/bonus01"
+        android:layout_width="200px"
+        android:layout_height="200px"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/destination"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/bonus_6_sec" />
 
 
 </RelativeLayout>
