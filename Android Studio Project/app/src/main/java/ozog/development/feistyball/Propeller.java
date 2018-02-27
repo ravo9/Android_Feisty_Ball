@@ -1,5 +1,6 @@
 package ozog.development.feistyball;
 
+import android.content.Context;
 import android.widget.ImageView;
 
 public class Propeller {
@@ -47,5 +48,22 @@ public class Propeller {
 
     public ImageView getImage() {
         return image;
+    }
+
+
+    public static void addPropeller(Context game, int x, int y) {
+
+        ImageView propeller = new ImageView(game);
+        propeller.setImageDrawable(Drawables.propellerImage);
+        int propellerLength = (int)(MainGame.screenWidth * 0.12);
+
+        propeller.setMinimumHeight(propellerLength);
+        propeller.setMinimumWidth(propellerLength);
+
+        propeller.setX(x);
+        propeller.setY(y);
+
+        MainGame.rl.addView(propeller);
+        MainGame.propellers.add(new Propeller(x, y, propellerLength, propeller));
     }
 }

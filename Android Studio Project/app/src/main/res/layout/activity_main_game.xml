@@ -36,7 +36,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="148dp"
-        android:onClick="nextLevel"
+        android:onClick="loadNextLevel"
         android:text="New Game"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="470dp" />
@@ -100,7 +100,7 @@
             android:layout_above="@+id/btnNewGame"
             android:layout_alignStart="@+id/windowLevelComplited"
             android:layout_marginTop="195dp"
-            android:onClick="nextLevel"
+            android:onClick="loadNextLevel"
             android:text="Next level" />
 
     </FrameLayout>
