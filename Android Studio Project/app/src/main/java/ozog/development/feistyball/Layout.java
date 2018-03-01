@@ -13,11 +13,14 @@ public class Layout {
     public static ImageView blackHoleA;
     public static ImageView blackHoleB;
     public static ImageView bonus01;
+    public static ImageView destinationIcon;
+    public static ImageView ballIcon;
 
     public static Button btnNewGame;
     public static Button btnRestartLevel;
     public static Button btnNextLevel;
     public static Button btnScores;
+    public static Button btnAbout;
 
     public static TextView gameTimer;
     public static TextView levelTimer;
@@ -37,11 +40,14 @@ public class Layout {
         blackHoleA = game.findViewById(R.id.blackHoleA);
         blackHoleB = game.findViewById(R.id.blackHoleB);
         bonus01 = game.findViewById(R.id.bonus01);
+        destinationIcon = game.findViewById(R.id.destinationIcon);
+        ballIcon = game.findViewById(R.id.ballIcon);
 
         btnNewGame = game.findViewById(R.id.btnNewGame);
         btnRestartLevel = game.findViewById(R.id.btnRestartLevel);
         btnNextLevel = game.findViewById(R.id.btnNextLevel);
         btnScores = game.findViewById(R.id.btnScores);
+        btnAbout = game.findViewById(R.id.btnAbout);
 
         gameTimer = game.findViewById(R.id.gameTimer);
         levelTimer = game.findViewById(R.id.levelTimer);

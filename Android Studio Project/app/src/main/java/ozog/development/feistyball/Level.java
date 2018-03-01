@@ -1,6 +1,8 @@
 package ozog.development.feistyball;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,24 +30,91 @@ public class Level {
         propellers = new ArrayList<>();
     }
 
+    public static void loadMainMenu() {
+
+        Layout.btnNewGame.setVisibility(View.VISIBLE);
+        Layout.btnScores.setVisibility(View.VISIBLE);
+        Layout.btnAbout.setVisibility(View.VISIBLE);
+
+        // Destination icon
+        Layout.destinationIcon.setVisibility(View.VISIBLE);
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(10000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        Layout.destinationIcon.setAnimation(rotate);
+
+        // Ball icon
+        Layout.ballIcon.setVisibility(View.VISIBLE);
+        RotateAnimation rotate2 = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
+                -2.1f, Animation.RELATIVE_TO_SELF, -0.6f);
+        rotate2.setDuration(8000);
+        rotate2.setRepeatCount(Animation.INFINITE);
+        Layout.ballIcon.setAnimation(rotate2);
+    }
+
+    public static void hideMainMenu() {
+
+        Layout.btnNewGame.setVisibility(View.INVISIBLE);
+        Layout.btnScores.setVisibility(View.INVISIBLE);
+        Layout.btnAbout.setVisibility(View.INVISIBLE);
+
+        Layout.destinationIcon.setVisibility(View.INVISIBLE);
+        Layout.destinationIcon.clearAnimation();
+
+        Layout.ballIcon.setVisibility(View.INVISIBLE);
+        Layout.ballIcon.clearAnimation();
+
+        // Make the ball and destination visible again.
+        Layout.ball.setVisibility(View.VISIBLE);
+        Layout.destination.setVisibility(View.VISIBLE);
+    }
+
+    public static void loadInterLevelMenu() {
+
+        MainGame.windowLevelComplited.setVisibility(View.VISIBLE);
+        MainGame.windowLevelComplited.animate().translationX(0).setDuration(2000);
+    }
+
+    public static void hideInterLevelMenu() {
+
+        MainGame.windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
+        MainGame.windowLevelComplited.setVisibility(View.INVISIBLE);
+        MainGame.windowLevelComplited.animate().translationX(screenWidth);
+    }
+
     public static void loadNextLevel(View v) {
 
-        if (currentLevel == 0) {
-            Time.gameTime = 0;
-            Layout.btnNewGame.setVisibility(View.INVISIBLE);
-            Layout.btnScores.setVisibility(View.INVISIBLE);
-            Level.setLevel5(MainGame.game);
-        }
-        else if (currentLevel == 1) {
-            Level.setLevel2(MainGame.game);
+        hideMainMenu();
+
+        // Choose proper level to load
+        switch (currentLevel){
+            case 0:
+                Time.gameTime = 0;
+                setLevel1(MainGame.game);
+                break;
+            case 1:
+                setLevel2(MainGame.game);
+                break;
+            case 2:
+                setLevel3(MainGame.game);
+                break;
+            case 3:
+                setLevel4(MainGame.game);
+                break;
+            case 4:
+                setLevel5(MainGame.game);
+                break;
+            case 5:
+                loadMainMenu();
+                break;
+
         }
 
         Time.levelTime = 0;
         currentLevel++;
 
-        MainGame.windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
-        MainGame.windowLevelComplited.setVisibility(View.INVISIBLE);
-        MainGame.windowLevelComplited.animate().translationX(screenWidth);
+        hideInterLevelMenu();
 
         Time.timer = new Timer();
 
@@ -71,7 +140,6 @@ public class Level {
 
     public static void levelComplited(View v)
     {
-
         Time.timer.cancel();
         int animationTime = 2000;
         Layout.ball.animate().alpha(0.0f).setDuration(animationTime);
@@ -86,8 +154,7 @@ public class Level {
                 o.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
 
-        MainGame.windowLevelComplited.setVisibility(View.VISIBLE);
-        MainGame.windowLevelComplited.animate().translationX(0).setDuration(2000);
+        loadInterLevelMenu();
 
         Layout.finalLevelTime.setText("Level Time: " + Time.displayTime(Time.levelTime));
         Layout.finalTotalTime.setText("Total Time: " + Time.displayTime(Time.gameTime));
@@ -125,7 +192,6 @@ public class Level {
         Propeller.addPropeller(game, (int)(screenWidth * 0.10), (int) (screenHeight * 0.1));
         Propeller.addPropeller(game, (int)(screenWidth * 0.70), (int) (screenHeight * 0.50));
         Propeller.addPropeller(game, (int)(screenWidth * 0.20), (int) (screenHeight * 0.90));
-
     }
 
     public static void setLevel2(MainGame game) {
@@ -155,7 +221,6 @@ public class Level {
         Propeller.addPropeller(game, (int)(screenWidth * 0.60), (int) (screenHeight * 0.02));
         Propeller.addPropeller(game, (int)(screenWidth * 0.08), (int) (screenHeight * 0.25));
         Propeller.addPropeller(game, (int)(screenWidth * 0.85), (int) (screenHeight * 0.85));
-
     }
 
     public static void setLevel3(MainGame game) {

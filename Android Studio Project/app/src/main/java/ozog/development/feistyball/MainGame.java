@@ -37,6 +37,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         Layout.loadLayoutElementsConnections(this);
 
         windowLevelComplited.animate().translationX(Layout.screenWidth);
+
+        Level.loadMainMenu();
     }
 
     // Sensors functionality that hasn't been moved to Sensors class

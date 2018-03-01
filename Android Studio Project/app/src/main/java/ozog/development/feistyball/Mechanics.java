@@ -180,5 +180,4 @@ public class Mechanics {
     public static void resetBonus01 () {
        isBonus01Achieved = false;
     }
-
 }
