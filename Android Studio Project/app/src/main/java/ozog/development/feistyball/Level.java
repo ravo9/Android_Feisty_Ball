@@ -1,10 +1,7 @@
 package ozog.development.feistyball;
 
-
-import android.content.Context;
 import android.view.View;
-import android.view.animation.Animation;
-
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,67 +12,76 @@ public class Level {
     private static int horizontalBrickWidth;
     private static int horizontalBrickHeight;
     private static int interBrickSpace;
+    public static int currentLevel;
+    public static ArrayList<Obstacle> obstacles;
+    public static ArrayList<Propeller> propellers;
 
 
     static {
-
-        screenWidth = MainGame.screenWidth;
-        screenHeight = MainGame.screenHeight;
+        screenWidth = Layout.screenWidth;
+        screenHeight = Layout.screenHeight;
         horizontalBrickWidth = (int)(screenWidth * 0.2);
         horizontalBrickHeight = (int)(horizontalBrickWidth * 0.25);
         interBrickSpace = (int)(horizontalBrickWidth * 0.1);
+        currentLevel = 0;
+        obstacles = new ArrayList<>();
+        propellers = new ArrayList<>();
     }
 
     public static void loadNextLevel(View v) {
 
-        if (MainGame.currentLevel == 0) {
-            MainGame.gameTime = 0;
+        if (currentLevel == 0) {
+            Time.gameTime = 0;
             Layout.btnNewGame.setVisibility(View.INVISIBLE);
             Layout.btnScores.setVisibility(View.INVISIBLE);
-            Level.setLevel4(MainGame.game);
+            Level.setLevel5(MainGame.game);
         }
-        else if (MainGame.currentLevel == 1) {
+        else if (currentLevel == 1) {
             Level.setLevel2(MainGame.game);
         }
 
-        MainGame.levelTime = 0;
-        MainGame.currentLevel++;
+        Time.levelTime = 0;
+        currentLevel++;
 
         MainGame.windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
         MainGame.windowLevelComplited.setVisibility(View.INVISIBLE);
         MainGame.windowLevelComplited.animate().translationX(screenWidth);
 
-        MainGame.timer = new Timer();
+        Time.timer = new Timer();
 
         // Movement
-        MainGame.timer.schedule(new TimerTask() {
+        Time.timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                MainGame.handler.post(new Runnable() {
+                Time.handler.post(new Runnable() {
                     @Override
                     public void run () {
-                        MainGame.update();
-                        MainGame.updateTime();
+                        Mechanics.update();
+                        Time.updateTime();
                     }
                 });
             }
         }, 0, 10);
+    }
 
+    public static void restartLevel(View v) {
+        currentLevel--;
+        loadNextLevel(v);
     }
 
     public static void levelComplited(View v)
     {
 
-        MainGame.timer.cancel();
+        Time.timer.cancel();
         int animationTime = 2000;
         Layout.ball.animate().alpha(0.0f).setDuration(animationTime);
         Layout.destination.animate().alpha(0.0f).setDuration(animationTime);
 
-        for (Propeller p: MainGame.propellers) {
+        for (Propeller p: propellers) {
             p.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
 
-        for (Obstacle o: MainGame.obstacles) {
+        for (Obstacle o: obstacles) {
             if (o.getImage() != null)
                 o.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
@@ -83,15 +89,15 @@ public class Level {
         MainGame.windowLevelComplited.setVisibility(View.VISIBLE);
         MainGame.windowLevelComplited.animate().translationX(0).setDuration(2000);
 
-        Layout.finalLevelTime.setText("Level Time: " + MainGame.displayTime(MainGame.levelTime));
-        Layout.finalTotalTime.setText("Total Time: " + MainGame.displayTime(MainGame.gameTime));
+        Layout.finalLevelTime.setText("Level Time: " + Time.displayTime(Time.levelTime));
+        Layout.finalTotalTime.setText("Total Time: " + Time.displayTime(Time.gameTime));
 
         // Clear level elements.
-        MainGame.propellers.clear();
-        MainGame.obstacles.clear();
+        propellers.clear();
+        obstacles.clear();
         Layout.ball.animate().cancel();
         Layout.destination.animate().cancel();
-
+        Mechanics.resetBonus01();
     }
 
     public static void setLevel1(MainGame game) {
@@ -231,6 +237,53 @@ public class Level {
         Layout.bonus01.setY((float)(screenHeight * 0.54));
     }
 
+    public static void setLevel5(MainGame game) {
+
+        float ballPositionX = (float) (screenWidth * 0.45);
+        float ballPositionY = (float) (screenHeight * 0.25);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.035);
+        float destinationPositionY = (float) (screenHeight * 0.83);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        Obstacle.addWalls();
+
+        Propeller.addPropeller(game, (int)(screenWidth * 0.1), (int) (screenHeight * 0.06));
+        Propeller.addPropeller(game, (int)(screenWidth * 0.78), (int) (screenHeight * 0.06));
+
+        Obstacle.addBrick(game, (int)(-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int)(-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 0.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 1.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
+
+        Layout.blackHoleA.setVisibility(View.VISIBLE);
+        Layout.blackHoleA.setX((float)(screenWidth * 0.07));
+        Layout.blackHoleA.setY((float)(screenHeight * 0.26));
+
+        Obstacle.addBrick(game, (int)(-interBrickSpace * 2.5), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int)(-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int)(horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.4), 0);
+
+        Layout.blackHoleB.setVisibility(View.VISIBLE);
+        Layout.blackHoleB.setX((float)(screenWidth * 0.93 - 240));
+        Layout.blackHoleB.setY((float)(screenHeight * 0.46));
+
+        Obstacle.addBrick(game, (int)(-interBrickSpace * 0.3 + horizontalBrickWidth), (int) (screenHeight * 0.64), 0);
+        Obstacle.addBrick(game, (int)(horizontalBrickWidth * 2), (int) (screenHeight * 0.64), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 0.6 + horizontalBrickWidth * 3), (int) (screenHeight * 0.64), 0);
+
+        Obstacle.addBrick(game, (int)(horizontalBrickWidth * 3 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace + horizontalBrickWidth * 4 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+        Obstacle.addBrick(game, (int)(interBrickSpace * 2 + horizontalBrickWidth * 5 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+
+        Layout.bonus01.setVisibility(View.VISIBLE);
+        Layout.bonus01.setX((float)(screenWidth * 0.82));
+        Layout.bonus01.setY((float)(screenHeight * 0.87));
+    }
 
 
     public static void setBallPosition(float x, float y) {

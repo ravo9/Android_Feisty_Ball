@@ -31,9 +31,7 @@ public class Propeller {
         return (int)(originX + length * 0.5);
     }
 
-    public int getCenterY() {
-        return (int)(originY + length * 0.5);
-    }
+    public int getCenterY() { return (int)(originY + length * 0.5); }
 
     public void switchOn() {
         switchedOn = true;
@@ -55,7 +53,7 @@ public class Propeller {
 
         ImageView propeller = new ImageView(game);
         propeller.setImageDrawable(Drawables.propellerImage);
-        int propellerLength = (int)(MainGame.screenWidth * 0.12);
+        int propellerLength = (int)(Layout.screenWidth * 0.12);
 
         propeller.setMinimumHeight(propellerLength);
         propeller.setMinimumWidth(propellerLength);
@@ -64,6 +62,6 @@ public class Propeller {
         propeller.setY(y);
 
         MainGame.rl.addView(propeller);
-        MainGame.propellers.add(new Propeller(x, y, propellerLength, propeller));
+        Level.propellers.add(new Propeller(x, y, propellerLength, propeller));
     }
 }

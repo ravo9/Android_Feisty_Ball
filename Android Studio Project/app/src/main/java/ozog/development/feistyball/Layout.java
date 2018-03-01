@@ -1,8 +1,7 @@
 package ozog.development.feistyball;
 
-
 import android.app.Activity;
-import android.content.Context;
+import android.content.res.Resources;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +24,13 @@ public class Layout {
     public static TextView finalLevelTime;
     public static TextView finalTotalTime;
 
+    public static int screenWidth;
+    public static int screenHeight;
+
     public static void loadLayoutElementsConnections(Activity game) {
+
+        screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
         ball = game.findViewById(R.id.ball);
         destination = game.findViewById(R.id.destination);

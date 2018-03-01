@@ -2,7 +2,6 @@ package ozog.development.feistyball;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,7 +28,7 @@ public class Drawables {
             destinationImage = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("destination02grey.png");
             destinationImageGrey = Drawable.createFromStream(stream, null);
-            stream = game.getAssets().open("bonus_6_sec.png");
+            stream = game.getAssets().open("bonus_6_sec_02.png");
             bonus6SecondImage = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("black_hole.png");
             blackHoleImage = Drawable.createFromStream(stream, null);

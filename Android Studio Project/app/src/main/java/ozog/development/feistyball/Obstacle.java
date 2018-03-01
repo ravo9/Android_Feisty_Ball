@@ -47,12 +47,12 @@ public class Obstacle {
 
         if (orientation == 0) {
             brick.setImageDrawable(Drawables.brickImageHorizontal);
-            brickWidth = (int)(MainGame.screenWidth * 0.2);
+            brickWidth = (int)(Layout.screenWidth * 0.2);
             brickHeight = (int)(brickWidth * 0.25);
         }
         else if (orientation == 1) {
             brick.setImageDrawable(Drawables.brickImageVertical);
-            brickHeight = (int)(MainGame.screenWidth * 0.2);
+            brickHeight = (int)(Layout.screenWidth * 0.2);
             brickWidth = (int)(brickHeight * 0.25);
         }
 
@@ -64,14 +64,14 @@ public class Obstacle {
         brick.setX(x);
         brick.setY(y);
 
-        MainGame.obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
+        Level.obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
     }
 
     public static void addWalls() {
-        MainGame.obstacles.add(new Obstacle(0, -1, MainGame.screenWidth, 1, null));
-        MainGame.obstacles.add(new Obstacle(MainGame.screenWidth - 1, 0, 1, MainGame.screenHeight, null));
-        MainGame.obstacles.add(new Obstacle(0, MainGame.screenHeight, MainGame.screenWidth, 1, null));
-        MainGame.obstacles.add(new Obstacle(-1, 0, 1, MainGame.screenHeight, null));
+        Level.obstacles.add(new Obstacle(0, -1, Layout.screenWidth, 1, null));
+        Level.obstacles.add(new Obstacle(Layout.screenWidth - 1, 0, 1, Layout.screenHeight, null));
+        Level.obstacles.add(new Obstacle(0, Layout.screenHeight, Layout.screenWidth, 1, null));
+        Level.obstacles.add(new Obstacle(-1, 0, 1, Layout.screenHeight, null));
     }
 
 }
