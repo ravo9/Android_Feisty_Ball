@@ -13,7 +13,10 @@ public class Drawables {
     public static Drawable destinationImage;
     public static Drawable destinationImageGrey;
     public static Drawable blackHoleImage;
+    public static Drawable destructionBall;
     public static Drawable bonus6SecondImage;
+    public static Drawable gameButtonPressed;
+    public static Drawable gameButtonUnpressed;
 
     public static void uploadImages(Context game) {
 
@@ -32,6 +35,12 @@ public class Drawables {
             bonus6SecondImage = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("black_hole.png");
             blackHoleImage = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("destruction_ball_360.png");
+            destructionBall = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("button_on.png");
+            gameButtonPressed = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("button_off.png");
+            gameButtonUnpressed = Drawable.createFromStream(stream, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -31,9 +31,10 @@ public class Mechanics {
         isPropellerThere();
         isBonusThere();
         isBlackHoleThere();
+        isDestructionBallThere();
         updatePropellersRotation();
         destinationUnlockCheck();
-
+        updateDestructionBallsMovement();
     }
 
     // Check if there is any obstacle (e.g. brick)
@@ -98,6 +99,41 @@ public class Mechanics {
         }
         else
             blackHoleFreezer--;
+    }
+
+    // Check if there is a destruction ball
+    public static void isDestructionBallThere() {
+
+        float r = (float) (DestructionBall.getBlackBallRadius() * 1.25);
+
+        for (DestructionBall d: Level.destructionBalls) {
+            if (ballCenterPointX > d.getBlackBallCenterX() - r && ballCenterPointX < d.getBlackBallCenterX() + r) {
+                if (ballCenterPointY > d.getBlackBallCenterY() - r && ballCenterPointY < d.getBlackBallCenterY() + r) {
+                    if (d.isSwitchedOn())
+                        d.switchOff();
+                }
+            }
+        }
+    }
+
+    // Check if there is a game button
+    public static void isGameButtonThere() {
+
+        float w = (float) (GameButton.getButtonWidth());
+
+        // Implement different height for pressed and unpressed button.
+        float h = (float) (GameButton.getButtonHeight());
+
+        for (GameButton g: Level.gameButtons) {
+            if (ballCenterPointX > g.getButtonX() && ballCenterPointX < g.getButtonX() + w) {
+                if (ballCenterPointY > g.getButtonY() && ballCenterPointY < g.getButtonY() + h + 5) {
+                   if (g.isPressed())
+                       Toast.makeText(MainGame.c, "PRESSED", Toast.LENGTH_SHORT);
+                   else
+                       Toast.makeText(MainGame.c, "UNPRESSED", Toast.LENGTH_SHORT);
+                }
+            }
+        }
     }
 
     public static boolean isObstacleAreaThere(float x, float y) {
@@ -179,5 +215,10 @@ public class Mechanics {
 
     public static void resetBonus01 () {
        isBonus01Achieved = false;
+    }
+
+    public static void updateDestructionBallsMovement() {
+
+        DestructionBall.updateMovementState();
     }
 }

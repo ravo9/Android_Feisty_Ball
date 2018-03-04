@@ -15,6 +15,7 @@ public class Layout {
     public static ImageView bonus01;
     public static ImageView destinationIcon;
     public static ImageView ballIcon;
+    public static ImageView bell;
 
     public static Button btnNewGame;
     public static Button btnRestartLevel;
