@@ -49,6 +49,17 @@ public class Propeller {
     }
 
 
+    public static boolean allPropellersSwitchedOn() {
+
+        for (Propeller p: Level.propellers) {
+            if (!p.switchedOn()) {
+               return false;
+            }
+        }
+        return true;
+    }
+
+
     public static void addPropeller(Context game, int x, int y) {
 
         ImageView propeller = new ImageView(game);

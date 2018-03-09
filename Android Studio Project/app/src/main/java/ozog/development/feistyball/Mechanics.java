@@ -9,10 +9,12 @@ public class Mechanics {
     private static float newX, newY;
     private static float ballCenterPointX, ballCenterPointY;
     private static int blackHoleFreezer;
+    private static int buttonFreezer;
     private static boolean isBonus01Achieved;
 
     static {
         blackHoleFreezer = 0;
+        buttonFreezer = 0;
         isBonus01Achieved = false;
     }
 
@@ -32,6 +34,7 @@ public class Mechanics {
         isBonusThere();
         isBlackHoleThere();
         isDestructionBallThere();
+        isGameButtonThere();
         updatePropellersRotation();
         destinationUnlockCheck();
         updateDestructionBallsMovement();
@@ -119,28 +122,29 @@ public class Mechanics {
     // Check if there is a game button
     public static void isGameButtonThere() {
 
-        float w = (float) (GameButton.getButtonWidth());
+        if (buttonFreezer == 0) {
 
-        // Implement different height for pressed and unpressed button.
-        float h = (float) (GameButton.getButtonHeight());
+            float ballCenterX = Layout.ball.getX() + 100;
+            float ballCenterY = Layout.ball.getY() + 100;
 
-        for (GameButton g: Level.gameButtons) {
-            if (ballCenterPointX > g.getButtonX() && ballCenterPointX < g.getButtonX() + w) {
-                if (ballCenterPointY > g.getButtonY() && ballCenterPointY < g.getButtonY() + h + 5) {
-                   if (g.isPressed())
-                       Toast.makeText(MainGame.c, "PRESSED", Toast.LENGTH_SHORT);
-                   else
-                       Toast.makeText(MainGame.c, "UNPRESSED", Toast.LENGTH_SHORT);
+            for (GameButton g: Level.gameButtons) {
+
+                if (collides(ballCenterX, ballCenterY, g.getButtonX(), g.getButtonY(),
+                        GameButton.getButtonWidth(), GameButton.getButtonHeight() + 5)) {
+                    g.toggle();
+                    buttonFreezer = 200;
                 }
             }
         }
+        else
+            buttonFreezer--;
     }
 
     public static boolean isObstacleAreaThere(float x, float y) {
 
         // x and y are left top corner of the ball image
         for (Obstacle o: Level.obstacles) {
-            if (collides(x + 100, y + 100, o))
+            if (collides(x + 100, y + 100, o.getOriginX(), o.getOriginY(), o.getWidth(), o.getHeight()))
                 return true;
         }
 
@@ -164,13 +168,7 @@ public class Mechanics {
     // Check if all propellers are switched on and the destination can be unlocked
     public static void destinationUnlockCheck() {
 
-        boolean allSwitched = true;
-        for (Propeller p: Level.propellers) {
-            if (!p.switchedOn()) {
-                allSwitched = false;
-            }
-        }
-        if (allSwitched == true) {
+        if (Propeller.allPropellersSwitchedOn()) {
             Layout.destination.setImageDrawable(Drawables.destinationImage);
             Layout.destination.setRotation(Layout.destination.getRotation() + (float)0.5);
             // Check if the destination has been achieved.
@@ -183,10 +181,10 @@ public class Mechanics {
     }
 
     // 'The coding daddy' function
-    private static boolean collides(float ballX, float ballY, Obstacle o) {
+    private static boolean collides(float ballX, float ballY, float obstacleX, float obstacleY, float obstacleWidth, float obstacleHeight) {
 
-        float closestX = clamp(ballX, o.getOriginX(), o.getOriginX() + o.getWidth());
-        float closestY = clamp(ballY, o.getOriginY(), o.getHeight() + o.getOriginY());
+        float closestX = clamp(ballX, obstacleX, obstacleX + obstacleWidth);
+        float closestY = clamp(ballY, obstacleY, obstacleY + obstacleHeight);
 
         float distanceX = ballX - closestX;
         float distanceY = ballY - closestY;
@@ -207,8 +205,8 @@ public class Mechanics {
     }
 
     public static void bonusAchieved (int value) {
-        Time.gameTime -= 600;
-        Time.levelTime -= 600;
+        Time.gameTime -= value * 100;
+        Time.levelTime -= value * 100;
         Toast.makeText(MainGame.c, "-" + value + " seconds!", Toast.LENGTH_SHORT).show();
         Layout.bonus01.setVisibility(View.INVISIBLE);
     }

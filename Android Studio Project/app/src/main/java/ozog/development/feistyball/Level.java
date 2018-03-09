@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Level {
+public class Level{
 
     private static int screenWidth;
     private static int screenHeight;
@@ -15,6 +15,7 @@ public class Level {
     private static int horizontalBrickHeight;
     private static int interBrickSpace;
     public static int currentLevel;
+    public static int lastLevelNumber;
     public static ArrayList<Obstacle> obstacles;
     public static ArrayList<Propeller> propellers;
     public static ArrayList<DestructionBall> destructionBalls;
@@ -27,6 +28,9 @@ public class Level {
         horizontalBrickHeight = (int) (horizontalBrickWidth * 0.25);
         interBrickSpace = (int) (horizontalBrickWidth * 0.05);
         currentLevel = 0;
+
+        lastLevelNumber = 7;
+
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
         destructionBalls = new ArrayList<>();
@@ -94,7 +98,7 @@ public class Level {
         switch (currentLevel) {
             case 0:
                 Time.gameTime = 0;
-                setLevel6(MainGame.game);
+                setLevel1(MainGame.game);
                 break;
             case 1:
                 setLevel2(MainGame.game);
@@ -109,9 +113,14 @@ public class Level {
                 setLevel5(MainGame.game);
                 break;
             case 5:
+                setLevel6(MainGame.game);
+                break;
+            case 6:
+                setLevel7(MainGame.game);
+                break;
+            case 7:
                 loadMainMenu();
                 break;
-
         }
 
         Time.levelTime = 0;
@@ -130,6 +139,7 @@ public class Level {
                     public void run() {
                         Mechanics.update();
                         Time.updateTime();
+                        Messages.update();
                     }
                 });
             }
@@ -164,6 +174,8 @@ public class Level {
         // Clear level elements.
         propellers.clear();
         obstacles.clear();
+        destructionBalls.clear();
+        gameButtons.clear();
         Layout.ball.animate().cancel();
         Layout.destination.animate().cancel();
         Mechanics.resetBonus01();
@@ -359,20 +371,94 @@ public class Level {
         setBallPosition(ballPositionX, ballPositionY);
 
         float destinationPositionX = (float) (screenWidth * 0.035);
-        float destinationPositionY = (float) (screenHeight * 0.83);
+        float destinationPositionY = (float) (screenHeight * 0.84);
         setDestinationPosition(destinationPositionX, destinationPositionY);
 
         Obstacle.addWalls();
+
+        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.4), 0, (float)0.5);
+        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.6), 0, (float)(1));
+
+        GameButton.addGameButton(game, (int) (screenWidth * 0.16), 0);
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(1));
 
         Obstacle.addBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.3), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.3), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.3), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.3), 0);
 
-        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.4), 0, 1);
-        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.8), 0, (float)(0.75));
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.5), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.5), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.5), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.5), 0);
 
-        GameButton.addGameButton(game, (int) (screenWidth * 0.16), 0);
+        Layout.bonus01.setVisibility(View.VISIBLE);
+        Layout.bonus01.setX((float) (screenWidth * 0.84));
+        Layout.bonus01.setY((float) (screenHeight * 0.55));
+
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.65), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.65), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.65), 0);
+        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.65), 0);
+
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.8), 0);
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.8), 0);
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.8), 0);
+        Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.8), 0);
+    }
+
+    public static void setLevel7(MainGame game) {
+
+        float ballPositionX = (float) (screenWidth * 0.8);
+        float ballPositionY = (float) (screenHeight * 0.84);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.7);
+        float destinationPositionY = (float) (screenHeight * 0.04);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        Obstacle.addWalls();
+
+        Layout.blackHoleA.setVisibility(View.VISIBLE);
+        Layout.blackHoleA.setX((float) (screenWidth * 0.35));
+        Layout.blackHoleA.setY((float) (screenHeight * 0.06));
+
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.2), 0);
+
+        Layout.blackHoleB.setVisibility(View.VISIBLE);
+        Layout.blackHoleB.setX((float) (screenWidth * 0.07));
+        Layout.blackHoleB.setY((float) (screenHeight * 0.26));
+
+        Obstacle.addBrick(game, (int) (interBrickSpace * 1), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 3 + horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
+
+        Propeller.addPropeller(game, (int) (screenWidth * 0.1), (int) (screenHeight * 0.5));
+        Propeller.addPropeller(game, (int) (screenWidth * 0.1), (int) (screenHeight * 0.8));
+
+        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.61), (float)(1));
+        Level.destructionBalls.get(0).rotate180();
+        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.81), (float)(1));
+        Level.destructionBalls.get(1).rotate180();
+        DestructionBall.addDestructionBall(game, (int) (screenWidth * 0.2), (int) (screenHeight * 1.01), (float)(1));
+        Level.destructionBalls.get(2).rotate180();
+
+        DestructionBall.setSpeed(8);
+
+        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.7), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 2), (int) (screenHeight * 0.7), 0);
+        Obstacle.addBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.7), 0);
+
+        GameButton.addGameButton(game, (int) (screenWidth * 0.1), 0);
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(1));
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(2));
     }
 
 
@@ -380,7 +466,6 @@ public class Level {
         Layout.ball.setX(x);
         Layout.ball.setY(y);
     }
-
 
     public static void setDestinationPosition(float x, float y) {
         Layout.destination.setImageDrawable(Drawables.destinationImageGrey);

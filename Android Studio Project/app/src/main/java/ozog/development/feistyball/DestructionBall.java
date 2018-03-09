@@ -95,6 +95,20 @@ public class DestructionBall {
         return (float) (width * 0.5);
     }
 
+    public ImageView getImage() {
+        return image;
+    }
+
+    public void rotate180() {
+        image.setRotation(180);
+        ballCenterY = (int) (this.image.getY() + 0.5 * width);
+    }
+
+    public void rotate90() {
+        image.setRotation(90);
+        ballCenterY = (int) (this.image.getY() + 0.5 * width);
+    }
+
     public boolean isSwitchedOn() {
         if ( switchedOn )
             return true;
@@ -105,6 +119,15 @@ public class DestructionBall {
     public void switchOff() {
         switchedOn = false;
     }
+
+    public void toggle() {
+        if ( switchedOn )
+            switchedOn = false;
+        else
+            switchedOn = true;
+    }
+
+    public static void setSpeed(int s) { speed = s; }
 
     public static void addDestructionBall (Context game, int x, int y, float movementState) {
 

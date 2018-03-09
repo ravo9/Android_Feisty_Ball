@@ -3,9 +3,12 @@ package ozog.development.feistyball;
 import android.content.Context;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class GameButton {
 
     private boolean pressed;
+    private ArrayList<DestructionBall> connectedDestructionBalls;
     private ImageView image;
 
     private static int width;
@@ -33,6 +36,7 @@ public class GameButton {
         MainGame.rl.addView(gameButton);
 
         this.pressed = false;
+        this.connectedDestructionBalls = new ArrayList<>();
         this.image = gameButton;
 
         Level.obstacles.add(new Obstacle(oX, oY, width, heightPressed, null));
@@ -57,6 +61,21 @@ public class GameButton {
         image.setMinimumHeight(heightUnpressed);
     }
 
+    public void toggle() {
+        if (isPressed()) {
+            pressed = false;
+            image.setImageDrawable(Drawables.gameButtonUnpressed);
+            for (DestructionBall d: connectedDestructionBalls)
+                d.toggle();
+        }
+        else {
+            pressed = true;
+            image.setImageDrawable(Drawables.gameButtonPressed);
+            for (DestructionBall d: connectedDestructionBalls)
+                d.toggle();
+        }
+    }
+
     public int getButtonX() {
         return (int)(image.getX());
     }
@@ -71,6 +90,10 @@ public class GameButton {
 
     public static int getButtonHeight() {
         return (int)(heightPressed);
+    }
+
+    public void addButtonDestructionBallConnection(DestructionBall d) {
+        this.connectedDestructionBalls.add(d);
     }
 
     public static void addGameButton (Context game, int x, int y) {
