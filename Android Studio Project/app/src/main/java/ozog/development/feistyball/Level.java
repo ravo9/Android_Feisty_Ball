@@ -1,8 +1,6 @@
 package ozog.development.feistyball;
 
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,43 +36,12 @@ public class Level{
     }
 
     public static void loadMainMenu() {
-
-        Layout.btnNewGame.setVisibility(View.VISIBLE);
-        Layout.btnScores.setVisibility(View.VISIBLE);
-        Layout.btnAbout.setVisibility(View.VISIBLE);
-
-        // Destination icon
-        Layout.destinationIcon.setVisibility(View.VISIBLE);
-        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
-                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(10000);
-        rotate.setRepeatCount(Animation.INFINITE);
-        Layout.destinationIcon.setAnimation(rotate);
-
-        // Ball icon
-        Layout.ballIcon.setVisibility(View.VISIBLE);
-        RotateAnimation rotate2 = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
-                -2.1f, Animation.RELATIVE_TO_SELF, -0.6f);
-        rotate2.setDuration(8000);
-        rotate2.setRepeatCount(Animation.INFINITE);
-        Layout.ballIcon.setAnimation(rotate2);
+        MainGame.game.closeGame();
     }
 
-    public static void hideMainMenu() {
+    public static void closeMainMenu() {
 
-        Layout.btnNewGame.setVisibility(View.INVISIBLE);
-        Layout.btnScores.setVisibility(View.INVISIBLE);
-        Layout.btnAbout.setVisibility(View.INVISIBLE);
 
-        Layout.destinationIcon.setVisibility(View.INVISIBLE);
-        Layout.destinationIcon.clearAnimation();
-
-        Layout.ballIcon.setVisibility(View.INVISIBLE);
-        Layout.ballIcon.clearAnimation();
-
-        // Make the ball and destination visible again.
-        Layout.ball.setVisibility(View.VISIBLE);
-        Layout.destination.setVisibility(View.VISIBLE);
     }
 
     public static void loadInterLevelMenu() {
@@ -90,9 +57,7 @@ public class Level{
         MainGame.windowLevelComplited.animate().translationX(screenWidth);
     }
 
-    public static void loadNextLevel(View v) {
-
-        hideMainMenu();
+    public static void loadNextLevel() {
 
         // Choose proper level to load
         switch (currentLevel) {
@@ -146,9 +111,9 @@ public class Level{
         }, 0, 10);
     }
 
-    public static void restartLevel(View v) {
+    public static void restartLevel() {
         currentLevel--;
-        loadNextLevel(v);
+        loadNextLevel();
     }
 
     public static void levelComplited(View v) {
@@ -170,6 +135,9 @@ public class Level{
 
         Layout.finalLevelTime.setText("Level Time: " + Time.displayTime(Time.levelTime));
         Layout.finalTotalTime.setText("Total Time: " + Time.displayTime(Time.gameTime));
+
+        // Update best score if has been reached
+        //if ( Time.levelTime > BestScores.
 
         // Clear level elements.
         propellers.clear();

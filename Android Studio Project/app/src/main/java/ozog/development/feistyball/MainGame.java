@@ -1,5 +1,6 @@
 package ozog.development.feistyball;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -40,7 +41,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         windowLevelComplited.animate().translationX(Layout.screenWidth);
 
-        Level.loadMainMenu();
+        Level.currentLevel = 0;
+        Level.loadNextLevel();
+
     }
 
     // Sensors functionality that hasn't been moved to Sensors class
@@ -73,24 +76,17 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     }
 
     public void loadNextLevel(View v) {
-        Level.loadNextLevel(v);
+        Level.loadNextLevel();
     }
 
-    public void restartLevel(View v) { Level.restartLevel(v); }
+    public void restartLevel(View v) { Level.restartLevel(); }
 
-    public void openBestScores(View v){
-        Intent intent = new Intent(this, BestScores.class);
+    public void closeGame(View v) { closeGame(); }
+
+    public void closeGame() {
+        Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
         finish();
-    }
-
-    public void openApplicationWebsite(View v) {
-
-        String url = "https://play.google.com/store/apps/developer?id=Rafal%20Ozog&hl=en_GB";
-        //String url = "market://details?id=<package_name>";
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
     }
 
 }

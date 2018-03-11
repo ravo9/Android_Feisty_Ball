@@ -21,8 +21,8 @@ public class Time {
         levelTime++;
         gameTime++;
 
-        Layout.levelTimer.setText("Level Time: " + displayTime(levelTime));
-        Layout.gameTimer.setText("Game Time: " + displayTime(gameTime));
+        Layout.levelTimer.setText("Level: " + displayTime(levelTime));
+        Layout.gameTimer.setText("Game: " + displayTime(gameTime));
     }
 
     public static String displayTime(int time) {
