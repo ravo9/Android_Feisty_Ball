@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Layout {
@@ -15,7 +16,6 @@ public class Layout {
     public static ImageView bonus01;
     public static ImageView destinationIcon;
     public static ImageView ballIcon;
-    public static ImageView bell;
 
     public static Button btnNewGame;
     public static Button btnRestartLevel;

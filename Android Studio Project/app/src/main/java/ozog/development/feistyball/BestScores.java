@@ -10,68 +10,108 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// This class is responsible both for the BestScores Activity (especially onCreate method),
+// and for the Best Scores static interface, used e.g. for best scores checking and updating.
+
 public class BestScores extends AppCompatActivity {
 
     public static RelativeLayout rl;
-    public static Context c;
-
     public static SharedPreferences scores;
 
-    public static ListView recordList;
-    public static List<String> recordsListString;
-    public static ArrayAdapter<String> arrayAdapter;
+    private ListView recordList;
+    private List<String> recordsListString;
+    private ArrayAdapter<String> arrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_best_scores);
 
-        rl = findViewById(R.id.RelativeLayout2);
-        //c = getApplicationContext();
-
         recordsListString = new ArrayList<>();
-
+        recordList = this.findViewById(R.id.recordList);
         arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, recordsListString);
-        recordList = findViewById(R.id.recordList);
         recordList.setAdapter(arrayAdapter);
 
-        loadRecords();
+        displayListUpdate();
     }
 
 
-    public void addRecord(int levelNumber, int score) {
-        scores = this.getSharedPreferences("scores", Context.MODE_PRIVATE);
+    public static void addRecord(int levelNumber, int score) {
+
+        scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = scores.edit();
         editor.putInt("level_" + levelNumber, score);
         editor.apply();
     }
 
-    public void getRecord(int levelNumber) {
-        scores = this.getSharedPreferences("scores", Context.MODE_PRIVATE);
-        int score = scores.getInt("level_" + levelNumber, -1); //0 is the default value
+    public static int getRecord(int levelNumber) {
+
+        scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
+        int score = scores.getInt("level_" + levelNumber, -1); //-1 is the default value
+        return score;
     }
 
-    public void loadRecords() {
+    public static boolean isRecordBroken() {
 
-        Database.bestScores = new Database(this);
-        Database.bestScores.createTable();
+        int currentLevel = Level.currentLevel;
+        int levelTime = Time.levelTime;
+
+        if ((levelTime < getRecord(currentLevel)) || (getRecord(currentLevel) == -1)){
+            Toast.makeText(MainMenu.game, "New level record!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public static void updateRecord() {
+
+        int currentLevel = Level.currentLevel;
+        int levelTime = Time.levelTime;
+
+        scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = scores.edit();
+
+        if (scores.contains("level_" + currentLevel))
+            editor.remove("level_" + currentLevel).commit();
+
+        addRecord(currentLevel, levelTime);
+    }
+
+    public void displayListUpdate() {
 
         recordsListString.clear();
 
-        // Tu cos nie gra.
-        //int gameRecord = Database.bestScores.getRecord(0);
-        //recordsListString.add("The whole game:      " + gameRecord);
-/*
+        int gameRecord = getRecord(0);
+        if (gameRecord == -1)
+            recordsListString.add("Game record:                  " + "00:00:00");
+        else
+            recordsListString.add("Game record:                  " + Time.displayTime(gameRecord));
+
         for (int i = Level.lastLevelNumber; i > 0; i--) {
-            int record = Database.bestScores.getRecord(i);
-            recordsListString.add("Level " + i + ":                             " + record);
+            int record = getRecord(i);
+            if (record == -1)
+                recordsListString.add("Level " + i + ":                             " + "00:00:00");
+            else
+                recordsListString.add("Level " + i + ":                             " + Time.displayTime(record));
         }
 
-        arrayAdapter.notifyDataSetChanged();*/
+        arrayAdapter.notifyDataSetChanged();
+    }
+
+    public void resetBestScores(View v) {
+
+        scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = scores.edit();
+        editor.clear().commit();
+
+        displayListUpdate();
     }
 
     public void closeBestScores(View v) {

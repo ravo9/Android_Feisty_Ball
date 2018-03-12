@@ -1,5 +1,6 @@
 package ozog.development.feistyball;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -13,16 +14,17 @@ import android.view.animation.RotateAnimation;
 public class MainMenu extends AppCompatActivity {
 
     private RotateAnimation rotate, rotate2;
+    public static Context game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        game = getApplicationContext();
+
         // Upload connections to the layout elements
         Layout.loadLayoutElementsConnections(this);
-
-
 
         // Destination icon
         rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,

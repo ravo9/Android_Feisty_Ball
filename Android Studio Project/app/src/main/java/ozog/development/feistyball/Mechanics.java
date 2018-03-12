@@ -10,11 +10,13 @@ public class Mechanics {
     private static float ballCenterPointX, ballCenterPointY;
     private static int blackHoleFreezer;
     private static int buttonFreezer;
+    private static int bumpingFreezer;
     private static boolean isBonus01Achieved;
 
     static {
         blackHoleFreezer = 0;
         buttonFreezer = 0;
+        bumpingFreezer = 0;
         isBonus01Achieved = false;
     }
 
@@ -50,7 +52,25 @@ public class Mechanics {
             Layout.ball.setX( newX );
         } else if (isObstacleAreaThere(currentX, newY) == false) {
             Layout.ball.setY(newY);
+        } else if (isObstacleAreaThere(newX, newY) == true && bumpingFreezer <= 0) {
+
+            // This is the code of slight bump after the ball cannot move (e.g. the inter-brick space).
+            if (currentX > newX)
+                newX = currentX + (currentX-newX);
+            else if (currentX < newX)
+                newX = currentX - (newX-currentX);
+            if (currentY > newY)
+                newY = currentY + (currentY-newY);
+            else if (currentY < newY)
+                newY = currentY - (newY-currentY);
+            Layout.ball.setX( newX );
+            Layout.ball.setY( newY );
+
+            // Freeze the bumping (100 is 1 second)
+            bumpingFreezer = 100;
         }
+
+        bumpingFreezer--;
     }
 
     // Check if there is a propeller
@@ -81,7 +101,7 @@ public class Mechanics {
     // Check if there is a black hole
     public static void isBlackHoleThere() {
 
-        if (blackHoleFreezer == 0) {
+        if (blackHoleFreezer <= 0) {
             if (ballCenterPointX > Layout.blackHoleA.getX() + 120 - 50 && ballCenterPointX < Layout.blackHoleA.getX() + 120 + 50) {
                 if (ballCenterPointY > Layout.blackHoleA.getY() + 120 - 50 && ballCenterPointY < Layout.blackHoleA.getY() + 120 + 50) {
                     Layout.ball.setX(Layout.blackHoleB.getX() + 30);
@@ -122,7 +142,7 @@ public class Mechanics {
     // Check if there is a game button
     public static void isGameButtonThere() {
 
-        if (buttonFreezer == 0) {
+        if (buttonFreezer <= 0) {
 
             float ballCenterX = Layout.ball.getX() + 100;
             float ballCenterY = Layout.ball.getY() + 100;

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -38,6 +39,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         // Upload connections to the layout elements
         Layout.loadLayoutElementsConnections(this);
+
+        // Keep the screen active (do not fade)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         windowLevelComplited.animate().translationX(Layout.screenWidth);
 
@@ -73,6 +77,12 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        Level.resetGameElements();
+        closeGame();
     }
 
     public void loadNextLevel(View v) {

@@ -40,4 +40,14 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="43dp" />
+
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnMainMenu"
+        android:layout_alignEnd="@+id/btnMainMenu"
+        android:layout_marginBottom="47dp"
+        android:onClick="resetBestScores"
+        android:text="Clear" />
 </RelativeLayout>

@@ -119,19 +119,14 @@
         android:id="@+id/blackHoleB"
         android:layout_width="240px"
         android:layout_height="240px"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:srcCompat="@drawable/black_hole" />
 
     <ImageView
         android:id="@+id/blackHoleA"
         android:layout_width="240px"
         android:layout_height="240px"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="11dp"
-        android:layout_toStartOf="@+id/blackHoleB"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:srcCompat="@drawable/black_hole" />
 
     <ImageView
