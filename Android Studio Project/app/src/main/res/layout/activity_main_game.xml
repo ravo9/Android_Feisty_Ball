@@ -135,7 +135,7 @@
         android:layout_height="200px"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/destination"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:srcCompat="@drawable/bonus_6_sec_02" />
 
 

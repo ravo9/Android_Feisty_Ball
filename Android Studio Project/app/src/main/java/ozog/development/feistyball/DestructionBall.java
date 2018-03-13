@@ -3,6 +3,7 @@ package ozog.development.feistyball;
 import android.content.Context;
 import android.media.Image;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class DestructionBall {
 
@@ -114,6 +115,16 @@ public class DestructionBall {
             return true;
         else
             return false;
+    }
+
+    public void destructionBallHit() {
+
+        // Stop this destruction ball
+        switchOff();
+
+        Time.gameTime += 10 * 100;
+        Time.levelTime += 10 * 100;
+        Toast.makeText(MainGame.c, "Penalty: +" + 10 + " seconds!", Toast.LENGTH_SHORT).show();
     }
 
     public void switchOff() {

@@ -61,15 +61,16 @@ public class Level{
 
     public static void loadNextLevel() {
 
-        // Hide the black holes by default
+        // Hide the black holes and bonuses by default
         Layout.blackHoleA.setX(-500);
         Layout.blackHoleB.setX(-500);
+        Layout.bonus01.setX(-550);
 
         // Choose proper level to load
         switch (currentLevel) {
             case 0:
                 Time.gameTime = 0;
-                setLevel4(MainGame.game);
+                setLevel7(MainGame.game);
                 //setLevel1(MainGame.game);
                 break;
             case 1:
@@ -135,6 +136,7 @@ public class Level{
         Layout.destination.animate().alpha(0.0f).setDuration(animationTime);
         Layout.blackHoleA.animate().alpha(0.0f).setDuration(animationTime);
         Layout.blackHoleB.animate().alpha(0.0f).setDuration(animationTime);
+        Layout.bonus01.animate().alpha(0.0f).setDuration(animationTime);
 
         for (Propeller p : propellers) {
             p.getImage().animate().alpha(0.0f).setDuration(animationTime);
@@ -143,6 +145,14 @@ public class Level{
         for (Obstacle o : obstacles) {
             if (o.getImage() != null)
                 o.getImage().animate().alpha(0.0f).setDuration(animationTime);
+        }
+
+        for (GameButton g : gameButtons) {
+            g.getImage().animate().alpha(0.0f).setDuration(animationTime);
+        }
+
+        for (DestructionBall d : destructionBalls) {
+            d.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
 
         loadInterLevelMenu();
@@ -168,10 +178,9 @@ public class Level{
         gameButtons.clear();
         Layout.ball.animate().cancel();
         Layout.destination.animate().cancel();
-        Mechanics.resetBonus01();
-
         Layout.blackHoleA.setX(-500);
         Layout.blackHoleB.setX(-500);
+        Layout.bonus01.setX(-550);
     }
 
     public static void setLevel1(MainGame game) {
@@ -275,7 +284,7 @@ public class Level{
     public static void setLevel4(MainGame game) {
 
         float ballPositionX = (float) (screenWidth * 0.45);
-        float ballPositionY = (float) (screenHeight * 0.35);
+        float ballPositionY = (float) (screenHeight * 0.15);
         setBallPosition(ballPositionX, ballPositionY);
 
         float destinationPositionX = (float) (screenWidth * 0.05);
@@ -283,6 +292,10 @@ public class Level{
         setDestinationPosition(destinationPositionX, destinationPositionY);
 
         Obstacle.addWalls();
+
+        Obstacle.addBrick(game, (int) ( -interBrickSpace * 1.5 +horizontalBrickWidth * 1), (int) (screenHeight * 0.315), 0);
+        Obstacle.addBrick(game, (int) ( -interBrickSpace * 0.5 + horizontalBrickWidth * 2 + interBrickSpace), (int) (screenHeight * 0.315), 0);
+        Obstacle.addBrick(game, (int) ( interBrickSpace * 0.5 + horizontalBrickWidth * 3 + interBrickSpace * 2), (int) (screenHeight * 0.315), 0);
 
         Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.48), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.48), 0);
@@ -293,28 +306,30 @@ public class Level{
         Obstacle.addBrick(game, (int) (screenWidth * 0.25), (int) (screenHeight * 0.48 + horizontalBrickHeight + interBrickSpace), 1);
         Obstacle.addBrick(game, (int) (screenWidth * 0.7), (int) (screenHeight * 0.48 - horizontalBrickWidth - interBrickSpace), 1);
 
+
+        Obstacle.addBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - 2 * interBrickSpace - horizontalBrickHeight), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
+        Obstacle.addBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.86 - horizontalBrickWidth), 0);
         Obstacle.addBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88), 1);
         Obstacle.addBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
 
-        Propeller.addPropeller(game, (int) (screenWidth * 0.8), (int) (screenHeight * 0.36));
-        Propeller.addPropeller(game, (int) (screenWidth * 0.12), (int) (screenHeight * 0.36));
+        Propeller.addPropeller(game, (int) (screenWidth * 0.81), (int) (screenHeight * 0.37));
+        Propeller.addPropeller(game, (int) (screenWidth * 0.55), (int) (screenHeight * 0.37));
         Propeller.addPropeller(game, (int) (screenWidth * 0.8), (int) (screenHeight * 0.9));
 
         Layout.blackHoleA.setX((float) (screenWidth * 0.78));
         Layout.blackHoleA.setY((float) (screenHeight * 0.04));
 
-        Layout.blackHoleB.setX((float) (screenWidth * 0.43));
-        Layout.blackHoleB.setY((float) (screenHeight * 0.88));
+        Layout.blackHoleB.setX((float) (screenWidth * 0.48));
+        Layout.blackHoleB.setY((float) (screenHeight * 0.78));
 
-        Layout.bonus01.setVisibility(View.VISIBLE);
         Layout.bonus01.setX((float) (screenWidth * 0.05));
         Layout.bonus01.setY((float) (screenHeight * 0.54));
     }
 
     public static void setLevel5(MainGame game) {
 
-        float ballPositionX = (float) (screenWidth * 0.45);
-        float ballPositionY = (float) (screenHeight * 0.25);
+        float ballPositionX = (float) (screenWidth * 0.15);
+        float ballPositionY = (float) (screenHeight - 200);
         setBallPosition(ballPositionX, ballPositionY);
 
         float destinationPositionX = (float) (screenWidth * 0.035);
@@ -352,7 +367,6 @@ public class Level{
         Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 4 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
         Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 5 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
 
-        Layout.bonus01.setVisibility(View.VISIBLE);
         Layout.bonus01.setX((float) (screenWidth * 0.82));
         Layout.bonus01.setY((float) (screenHeight * 0.87));
     }
@@ -364,7 +378,7 @@ public class Level{
         setBallPosition(ballPositionX, ballPositionY);
 
         float destinationPositionX = (float) (screenWidth * 0.035);
-        float destinationPositionY = (float) (screenHeight * 0.84);
+        float destinationPositionY = (float) (screenHeight * 0.09);
         setDestinationPosition(destinationPositionX, destinationPositionY);
 
         Obstacle.addWalls();
@@ -387,7 +401,7 @@ public class Level{
         Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.5), 0);
 
         Layout.bonus01.setVisibility(View.VISIBLE);
-        Layout.bonus01.setX((float) (screenWidth * 0.84));
+        Layout.bonus01.setX((float) (screenWidth * 0.83));
         Layout.bonus01.setY((float) (screenHeight * 0.55));
 
         Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.65), 0);
@@ -399,12 +413,14 @@ public class Level{
         Obstacle.addBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.8), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.8), 0);
         Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.8), 0);
+
+        Propeller.addPropeller(game, (int) (screenWidth * 0.07), (int) (screenHeight * 0.88));
     }
 
     public static void setLevel7(MainGame game) {
 
         float ballPositionX = (float) (screenWidth * 0.8);
-        float ballPositionY = (float) (screenHeight * 0.84);
+        float ballPositionY = (float) (screenHeight * 0.07);
         setBallPosition(ballPositionX, ballPositionY);
 
         float destinationPositionX = (float) (screenWidth * 0.7);

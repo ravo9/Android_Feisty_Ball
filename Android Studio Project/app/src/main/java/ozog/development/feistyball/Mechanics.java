@@ -31,15 +31,15 @@ public class Mechanics {
         ballCenterPointX = currentX + 90;
         ballCenterPointY = currentY + 90;
 
+        updatePropellersRotation();
+        updateDestructionBallsMovement();
         isObstacleThere();
         isPropellerThere();
         isBonusThere();
         isBlackHoleThere();
         isDestructionBallThere();
         isGameButtonThere();
-        updatePropellersRotation();
         destinationUnlockCheck();
-        updateDestructionBallsMovement();
     }
 
     // Check if there is any obstacle (e.g. brick)
@@ -89,12 +89,8 @@ public class Mechanics {
     public static void isBonusThere() {
 
         if (ballCenterPointX > Layout.bonus01.getX() + 100 - 50 && ballCenterPointX < Layout.bonus01.getX() + 100 + 50) {
-            if (ballCenterPointY > Layout.bonus01.getY() + 100 - 50 && ballCenterPointY < Layout.bonus01.getY() + 100 + 50) {
-                if (!isBonus01Achieved) {
-                    bonusAchieved(6);
-                    isBonus01Achieved = true;
-                }
-            }
+            if (ballCenterPointY > Layout.bonus01.getY() + 100 - 50 && ballCenterPointY < Layout.bonus01.getY() + 100 + 50)
+                bonusAchieved(6);
         }
     }
 
@@ -133,7 +129,7 @@ public class Mechanics {
             if (ballCenterPointX > d.getBlackBallCenterX() - r && ballCenterPointX < d.getBlackBallCenterX() + r) {
                 if (ballCenterPointY > d.getBlackBallCenterY() - r && ballCenterPointY < d.getBlackBallCenterY() + r) {
                     if (d.isSwitchedOn())
-                        d.switchOff();
+                        d.destructionBallHit();
                 }
             }
         }
@@ -228,11 +224,7 @@ public class Mechanics {
         Time.gameTime -= value * 100;
         Time.levelTime -= value * 100;
         Toast.makeText(MainGame.c, "-" + value + " seconds!", Toast.LENGTH_SHORT).show();
-        Layout.bonus01.setVisibility(View.INVISIBLE);
-    }
-
-    public static void resetBonus01 () {
-       isBonus01Achieved = false;
+        Layout.bonus01.setX(-500);
     }
 
     public static void updateDestructionBallsMovement() {

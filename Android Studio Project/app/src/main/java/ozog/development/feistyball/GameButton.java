@@ -84,6 +84,10 @@ public class GameButton {
         return (int)(image.getY());
     }
 
+    public ImageView getImage() {
+        return image;
+    }
+
     public static int getButtonWidth() {
         return (int)(width);
     }
