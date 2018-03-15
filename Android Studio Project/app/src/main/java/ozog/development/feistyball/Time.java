@@ -2,6 +2,7 @@ package ozog.development.feistyball;
 
 import java.util.Timer;
 import android.os.Handler;
+import android.view.View;
 
 public class Time {
 
@@ -19,10 +20,13 @@ public class Time {
     public static void updateTime() {
 
         levelTime++;
-        gameTime++;
-
         Layout.levelTimer.setText("Level: " + displayTime(levelTime));
-        Layout.gameTimer.setText("Game: " + displayTime(gameTime));
+
+        if (MainGame.gameMode == "fullGame"){
+
+            gameTime++;
+            Layout.gameTimer.setText("Game: " + displayTime(gameTime));
+        } else if (MainGame.gameMode == "singleLevel") {}
     }
 
     public static String displayTime(int time) {

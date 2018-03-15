@@ -2,6 +2,7 @@ package ozog.development.feistyball;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ public class MainMenu extends AppCompatActivity {
 
     private RotateAnimation rotate, rotate2;
     public static Context game;
+    public static SharedPreferences displayFeedbackStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +46,19 @@ public class MainMenu extends AppCompatActivity {
     public void openNewGame(View v){
         Intent intent = new Intent(this, MainGame.class);
         startActivity(intent);
+        MainGame.gameMode = "fullGame";
+        MainGame.singleLevelNumber = -1;
         finish();
     }
 
     public void openBestScores(View v){
         Intent intent = new Intent(this, BestScores.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void openSingleLevelMenu(View v){
+        Intent intent = new Intent(this, SingleLevelMenu.class);
         startActivity(intent);
         finish();
     }

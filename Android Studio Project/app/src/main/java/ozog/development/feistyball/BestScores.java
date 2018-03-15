@@ -1,11 +1,12 @@
 package ozog.development.feistyball;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -34,13 +35,19 @@ public class BestScores extends AppCompatActivity {
         setContentView(R.layout.activity_best_scores);
 
         recordsListString = new ArrayList<>();
-        recordList = this.findViewById(R.id.recordList);
+        recordList = this.findViewById(R.id.levelList);
         arrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, recordsListString);
         recordList.setAdapter(arrayAdapter);
 
         displayListUpdate();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+        finish();
+    }
 
     public static void addRecord(int levelNumber, int score) {
 
@@ -57,31 +64,38 @@ public class BestScores extends AppCompatActivity {
         return score;
     }
 
-    public static boolean isRecordBroken() {
+    public static void updateBestScores() {
 
         int currentLevel = Level.currentLevel;
         int levelTime = Time.levelTime;
-
-        if ((levelTime < getRecord(currentLevel)) || (getRecord(currentLevel) == -1)){
-            Toast.makeText(MainMenu.game, "New level record!", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public static void updateRecord() {
-
-        int currentLevel = Level.currentLevel;
-        int levelTime = Time.levelTime;
+        int gameTime = Time.gameTime;
 
         scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = scores.edit();
 
-        if (scores.contains("level_" + currentLevel))
-            editor.remove("level_" + currentLevel).commit();
+        // Level record check
+        if ((levelTime < getRecord(currentLevel)) || (getRecord(currentLevel) == -1)){
+            Toast.makeText(MainMenu.game, "New level record!", Toast.LENGTH_SHORT).show();
 
-        addRecord(currentLevel, levelTime);
+            if (scores.contains("level_" + currentLevel))
+                editor.remove("level_" + currentLevel).commit();
+
+            addRecord(currentLevel, levelTime);
+        }
+
+        if (MainGame.gameMode == "fullGame"){
+
+            // Game record check
+            if ((currentLevel == Level.lastLevelNumber) && ((gameTime < getRecord(0)) || (getRecord(0) == -1))){
+                Toast.makeText(MainMenu.game, "Game record broken!", Toast.LENGTH_LONG).show();
+
+                if (scores.contains("level_" + 0))
+                    editor.remove("level_" + 0).commit();
+
+                addRecord(0, gameTime);
+            }
+
+        } else if (MainGame.gameMode == "singleLevel") {}
     }
 
     public void displayListUpdate() {
@@ -107,11 +121,27 @@ public class BestScores extends AppCompatActivity {
 
     public void resetBestScores(View v) {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Are you sure you want to reset all scores?");
+        builder.setNegativeButton("Confirm", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                resetAll();
+                displayListUpdate();
+            }
+        });
+        builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public static void resetAll() {
         scores = MainMenu.game.getSharedPreferences("scores", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = scores.edit();
         editor.clear().commit();
-
-        displayListUpdate();
     }
 
     public void closeBestScores(View v) {

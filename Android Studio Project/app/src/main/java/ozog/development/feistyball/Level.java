@@ -29,7 +29,7 @@ public class Level{
         interBrickSpace = (int) (horizontalBrickWidth * 0.05);
         currentLevel = 0;
 
-        lastLevelNumber = 7;
+        lastLevelNumber = 8;
 
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
@@ -41,12 +41,25 @@ public class Level{
         MainGame.game.closeGame();
     }
 
-    public static void closeMainMenu() {
-
-
-    }
-
     public static void loadInterLevelMenu() {
+
+        Layout.finalLevelTime.setText("Level Time: " + Time.displayTime(Time.levelTime));
+
+        if (MainGame.gameMode == "fullGame"){
+
+            Layout.finalTotalTime.setText("Total Time: " + Time.displayTime(Time.gameTime));
+
+            if (currentLevel == lastLevelNumber)
+                loadEndingMenu();
+
+        } else if (MainGame.gameMode == "singleLevel") {
+
+            int currentLevelRecord = BestScores.getRecord(currentLevel);
+            if (currentLevelRecord == -1)
+                Layout.finalTotalTime.setText("Level Record: 00:00:00");
+            else
+                Layout.finalTotalTime.setText("Level Record: " + Time.displayTime(currentLevelRecord));
+        }
 
         MainGame.windowLevelComplited.setVisibility(View.VISIBLE);
         MainGame.windowLevelComplited.animate().translationX(0).setDuration(2000);
@@ -57,6 +70,32 @@ public class Level{
         MainGame.windowLevelComplited.animate().translationX(-screenWidth).setDuration(2000);
         MainGame.windowLevelComplited.setVisibility(View.INVISIBLE);
         MainGame.windowLevelComplited.animate().translationX(screenWidth);
+    }
+
+    public static void loadEndingMenu() {
+        Layout.levelCompletedTitle.setText("Game completed!");
+        Layout.btnNextLevel.setText("Restart game");
+        Layout.btnNextLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wholeGameRestart();
+            }
+        });
+    }
+
+    public static void wholeGameRestart() {
+        currentLevel = 0;
+        loadNextLevel();
+
+        // Reset ending menu settings (make the level completed menu again)
+        Layout.levelCompletedTitle.setText("Level completed!");
+        Layout.btnNextLevel.setText("Next level");
+        Layout.btnNextLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadNextLevel();
+            }
+        });
     }
 
     public static void loadNextLevel() {
@@ -70,8 +109,7 @@ public class Level{
         switch (currentLevel) {
             case 0:
                 Time.gameTime = 0;
-                setLevel7(MainGame.game);
-                //setLevel1(MainGame.game);
+                setLevel1(MainGame.game);
                 break;
             case 1:
                 setLevel2(MainGame.game);
@@ -92,9 +130,14 @@ public class Level{
                 setLevel7(MainGame.game);
                 break;
             case 7:
-                loadMainMenu();
+                setLevel8(MainGame.game);
                 break;
         }
+
+        if (MainGame.gameMode == "fullGame")
+            Layout.gameTimer.setVisibility(View.VISIBLE);
+        else if (MainGame.gameMode == "singleLevel")
+            Layout.gameTimer.setVisibility(View.INVISIBLE);
 
         Time.levelTime = 0;
         currentLevel++;
@@ -155,16 +198,13 @@ public class Level{
             d.getImage().animate().alpha(0.0f).setDuration(animationTime);
         }
 
-        loadInterLevelMenu();
-
+        // It should wait few seconds here (elements need to be faded)
         resetGameElements();
 
-        Layout.finalLevelTime.setText("Level Time: " + Time.displayTime(Time.levelTime));
-        Layout.finalTotalTime.setText("Total Time: " + Time.displayTime(Time.gameTime));
-
         // Update best score if it has been broken
-        if (BestScores.isRecordBroken())
-            BestScores.updateRecord();
+        BestScores.updateBestScores();
+
+        loadInterLevelMenu();
     }
 
     public static void resetGameElements() {
@@ -178,6 +218,9 @@ public class Level{
         gameButtons.clear();
         Layout.ball.animate().cancel();
         Layout.destination.animate().cancel();
+        Layout.blackHoleA.animate().cancel();
+        Layout.blackHoleB.animate().cancel();
+        Layout.bonus01.animate().cancel();
         Layout.blackHoleA.setX(-500);
         Layout.blackHoleB.setX(-500);
         Layout.bonus01.setX(-550);
@@ -195,15 +238,15 @@ public class Level{
 
         Obstacle.addWalls();
 
-        Obstacle.addBrick(game, 10, (int) (screenHeight * 0.26), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.2 + 20), (int) (screenHeight * 0.26), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.4 + 40), (int) (screenHeight * 0.26), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.8 - 10), (int) (screenHeight * 0.26), 0);
+        Obstacle.addRedBrick(game, 10, (int) (screenHeight * 0.26), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2 + 20), (int) (screenHeight * 0.26), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.4 + 40), (int) (screenHeight * 0.26), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.8 - 10), (int) (screenHeight * 0.26), 0);
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.2 - 70), (int) (screenHeight * 0.40), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.4 - 50), (int) (screenHeight * 0.40), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.6 - 30), (int) (screenHeight * 0.40), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.8 - 10), (int) (screenHeight * 0.40), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2 - 70), (int) (screenHeight * 0.40), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.4 - 50), (int) (screenHeight * 0.40), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.6 - 30), (int) (screenHeight * 0.40), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.8 - 10), (int) (screenHeight * 0.40), 0);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.10), (int) (screenHeight * 0.1));
         Propeller.addPropeller(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.50));
@@ -222,17 +265,17 @@ public class Level{
 
         Obstacle.addWalls();
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.5), (int) (screenHeight * 0.3), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.7 + 20), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.5), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.7 + 20), (int) (screenHeight * 0.3), 0);
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48), 1);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48 + 20 + horizontalBrickWidth), 1);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48 + 40 + horizontalBrickWidth * 2), 1);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48), 1);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48 + 20 + horizontalBrickWidth), 1);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2 + 20), (int) (screenHeight * 0.48 + 40 + horizontalBrickWidth * 2), 1);
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.8), (int) (screenHeight * 0.77), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.74), (int) (screenHeight * 0.77), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.8), (int) (screenHeight * 0.77), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.74), (int) (screenHeight * 0.77), 1);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.60), (int) (screenHeight * 0.02));
         Propeller.addPropeller(game, (int) (screenWidth * 0.08), (int) (screenHeight * 0.25));
@@ -252,24 +295,24 @@ public class Level{
 
         Obstacle.addWalls();
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2), (int) (screenHeight * 0.25), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth), (int) (screenHeight * 0.25), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.25), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.25), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 4), (int) (screenHeight * 0.25), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2), (int) (screenHeight * 0.25), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth), (int) (screenHeight * 0.25), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.25), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.25), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 4), (int) (screenHeight * 0.25), 0);
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 1 + 75), (int) (screenHeight * 0.45), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2 + 75), (int) (screenHeight * 0.45), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 3 + 75), (int) (screenHeight * 0.45), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 4 + 75), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth + 75), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2 + 75), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 3 + 75), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 4 + 75), (int) (screenHeight * 0.45), 0);
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + interBrickSpace), 1);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + horizontalBrickWidth + interBrickSpace * 2), 1);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + + horizontalBrickWidth * 2 + interBrickSpace * 3), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + interBrickSpace), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + horizontalBrickWidth + interBrickSpace * 2), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.70), (int) (screenHeight * 0.45 + horizontalBrickHeight + + horizontalBrickWidth * 2 + interBrickSpace * 3), 1);
 
-        Obstacle.addBrick(game, (int) (0.86* horizontalBrickWidth ), (int) (screenHeight * 0.7), 1);
-        Obstacle.addBrick(game, (int) (0.86 * horizontalBrickWidth ), (int) (screenHeight * 0.7 + horizontalBrickWidth + interBrickSpace), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 1.86 - horizontalBrickHeight - 1), (int) (screenHeight * 0.7 + horizontalBrickWidth + horizontalBrickHeight + interBrickSpace * 2), 1);
+        Obstacle.addRedBrick(game, (int) (0.86* horizontalBrickWidth ), (int) (screenHeight * 0.7), 1);
+        Obstacle.addRedBrick(game, (int) (0.86 * horizontalBrickWidth ), (int) (screenHeight * 0.7 + horizontalBrickWidth + interBrickSpace), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 1.86 - horizontalBrickHeight - 1), (int) (screenHeight * 0.7 + horizontalBrickWidth + horizontalBrickHeight + interBrickSpace * 2), 1);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.1));
         Propeller.addPropeller(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.34));
@@ -293,24 +336,24 @@ public class Level{
 
         Obstacle.addWalls();
 
-        Obstacle.addBrick(game, (int) ( -interBrickSpace * 1.5 +horizontalBrickWidth * 1), (int) (screenHeight * 0.315), 0);
-        Obstacle.addBrick(game, (int) ( -interBrickSpace * 0.5 + horizontalBrickWidth * 2 + interBrickSpace), (int) (screenHeight * 0.315), 0);
-        Obstacle.addBrick(game, (int) ( interBrickSpace * 0.5 + horizontalBrickWidth * 3 + interBrickSpace * 2), (int) (screenHeight * 0.315), 0);
+        Obstacle.addRedBrick(game, (int) ( -interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.315), 0);
+        Obstacle.addRedBrick(game, (int) ( -interBrickSpace * 0.5 + horizontalBrickWidth * 2 + interBrickSpace), (int) (screenHeight * 0.315), 0);
+        Obstacle.addRedBrick(game, (int) ( interBrickSpace * 0.5 + horizontalBrickWidth * 3 + interBrickSpace * 2), (int) (screenHeight * 0.315), 0);
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 0.5 + horizontalBrickWidth * 2), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 0.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.48), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 0.5 + horizontalBrickWidth * 2), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 0.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.48), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.48), 0);
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.25), (int) (screenHeight * 0.48 + horizontalBrickHeight + interBrickSpace), 1);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.7), (int) (screenHeight * 0.48 - horizontalBrickWidth - interBrickSpace), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.25), (int) (screenHeight * 0.48 + horizontalBrickHeight + interBrickSpace), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.7), (int) (screenHeight * 0.48 - horizontalBrickWidth - interBrickSpace), 1);
 
 
-        Obstacle.addBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - 2 * interBrickSpace - horizontalBrickHeight), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.86 - horizontalBrickWidth), 0);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88), 1);
-        Obstacle.addBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - 2 * interBrickSpace - horizontalBrickHeight), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.67 - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.86 - horizontalBrickWidth), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.67), (int) (screenHeight * 0.88 - interBrickSpace - horizontalBrickWidth), 1);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.81), (int) (screenHeight * 0.37));
         Propeller.addPropeller(game, (int) (screenWidth * 0.55), (int) (screenHeight * 0.37));
@@ -341,31 +384,31 @@ public class Level{
         Propeller.addPropeller(game, (int) (screenWidth * 0.1), (int) (screenHeight * 0.06));
         Propeller.addPropeller(game, (int) (screenWidth * 0.78), (int) (screenHeight * 0.06));
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 0.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 0.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
 
         Layout.blackHoleA.setX((float) (screenWidth * 0.07));
         Layout.blackHoleA.setY((float) (screenHeight * 0.26));
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.4), 0);
 
         Layout.blackHoleB.setX((float) (screenWidth * 0.93 - 240));
         Layout.blackHoleB.setY((float) (screenHeight * 0.46));
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 0.3 + horizontalBrickWidth), (int) (screenHeight * 0.64), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.64), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 0.6 + horizontalBrickWidth * 3), (int) (screenHeight * 0.64), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 0.3 + horizontalBrickWidth), (int) (screenHeight * 0.64), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.64), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 0.6 + horizontalBrickWidth * 3), (int) (screenHeight * 0.64), 0);
 
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 3 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 4 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 5 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 3 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 4 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth * 5 - screenWidth * 0.11), (int) (screenHeight * 0.81), 0);
 
         Layout.bonus01.setX((float) (screenWidth * 0.82));
         Layout.bonus01.setY((float) (screenHeight * 0.87));
@@ -390,29 +433,28 @@ public class Level{
         gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
         gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(1));
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.3), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.3), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.3), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.3), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.3), 0);
 
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.5), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.5), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.5), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.5), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.5), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.5), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.5), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.5), 0);
 
-        Layout.bonus01.setVisibility(View.VISIBLE);
         Layout.bonus01.setX((float) (screenWidth * 0.83));
         Layout.bonus01.setY((float) (screenHeight * 0.55));
 
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.65), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.65), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.65), 0);
-        Obstacle.addBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.65), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 4 - interBrickSpace * 4), (int) (screenHeight * 0.65), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 3 - interBrickSpace * 3), (int) (screenHeight * 0.65), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth * 2 - interBrickSpace * 2), (int) (screenHeight * 0.65), 0);
+        Obstacle.addRedBrick(game, (int) (screenWidth - horizontalBrickWidth - interBrickSpace), (int) (screenHeight * 0.65), 0);
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.8), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.8), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.8), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.8), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 4), (int) (screenHeight * 0.8), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 3 + horizontalBrickWidth), (int) (screenHeight * 0.8), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth * 2), (int) (screenHeight * 0.8), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3), (int) (screenHeight * 0.8), 0);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.07), (int) (screenHeight * 0.88));
     }
@@ -432,19 +474,19 @@ public class Level{
         Layout.blackHoleA.setX((float) (screenWidth * 0.35));
         Layout.blackHoleA.setY((float) (screenHeight * 0.06));
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 1.5 + horizontalBrickWidth), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 2), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 1.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 4), (int) (screenHeight * 0.2), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 3.5 + horizontalBrickWidth * 5), (int) (screenHeight * 0.2), 0);
 
         Layout.blackHoleB.setX((float) (screenWidth * 0.07));
         Layout.blackHoleB.setY((float) (screenHeight * 0.26));
 
-        Obstacle.addBrick(game, (int) (interBrickSpace * 1), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 3 + horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2 + horizontalBrickWidth), (int) (screenHeight * 0.4), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 3 + horizontalBrickWidth * 2), (int) (screenHeight * 0.4), 0);
 
         Propeller.addPropeller(game, (int) (screenWidth * 0.1), (int) (screenHeight * 0.5));
         Propeller.addPropeller(game, (int) (screenWidth * 0.1), (int) (screenHeight * 0.8));
@@ -458,14 +500,69 @@ public class Level{
 
         DestructionBall.setSpeed(8);
 
-        Obstacle.addBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.7), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 2), (int) (screenHeight * 0.7), 0);
-        Obstacle.addBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.7), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2.5), (int) (screenHeight * 0.7), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace + horizontalBrickWidth * 2), (int) (screenHeight * 0.7), 0);
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 2.5 + horizontalBrickWidth * 3), (int) (screenHeight * 0.7), 0);
 
         GameButton.addGameButton(game, (int) (screenWidth * 0.1), 0);
         gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
         gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(1));
         gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(2));
+    }
+
+    public static void setLevel8(MainGame game) {
+
+        float ballPositionX = (float) (screenWidth * 0.43);
+        float ballPositionY = (float) (screenHeight * 0.88);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.62);
+        float destinationPositionY = (float) (screenHeight * 0.86);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        Obstacle.addWalls();
+
+        Layout.blackHoleA.setX((float) (screenWidth * 0.35));
+        Layout.blackHoleA.setY((float) (screenHeight * 0.04));
+
+        Layout.blackHoleB.setX((float) (screenWidth * 0.55));
+        Layout.blackHoleB.setY((float) (screenHeight * 0.21));
+
+        Layout.bonus01.setX((float) (screenWidth * 0.025));
+        Layout.bonus01.setY((float) (screenHeight * 0.89));
+
+        Propeller.addPropeller(game, (int) (screenWidth * 0.565), (int) (screenHeight * 0.71));
+        Propeller.addPropeller(game, (int) (screenWidth * 0.04), (int) (screenHeight * 0.21));
+        Propeller.addPropeller(game, (int) (screenWidth * 0.04), (int) (screenHeight * 0.71));
+
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 3), (int) (screenHeight * 0.16), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth), (int) (screenHeight * 0.16), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 2), (int) (screenHeight * 0.16), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 3), (int) (screenHeight * 0.16), 0);
+
+        Obstacle.addRedBrick(game, (int) (interBrickSpace * 0.75 + horizontalBrickWidth + horizontalBrickHeight), (int) (screenHeight * 0.5), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 3 - horizontalBrickHeight), (int) (screenHeight * 0.65), 0);
+
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.2), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.2 + horizontalBrickWidth + interBrickSpace), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.2 + 2 * (horizontalBrickWidth + interBrickSpace)), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.2 + 3 * (horizontalBrickWidth + interBrickSpace)), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.75), (int) (screenHeight * 0.2 + 4 * (horizontalBrickWidth + interBrickSpace)), 1);
+
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.45), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.45 + horizontalBrickWidth + interBrickSpace), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.45 + 2 * (horizontalBrickWidth + interBrickSpace)), 1);
+        Obstacle.addRedBrick(game, (int) (screenWidth * 0.2), (int) (screenHeight * 0.45 + 3 * (horizontalBrickWidth + interBrickSpace) + 2 * interBrickSpace + horizontalBrickHeight), 1);
+
+        Obstacle.addGreyBrick(game, (int) (-interBrickSpace * 3), (int) (screenHeight * 0.83), 0);
+
+        GameButton.addGameButton(game, (int) (screenWidth * 0.1), 0);
+        // Game Button is also a part of 'obstacles' array, so I need to connect this button to the second last element in that set.
+        gameButtons.get(0).addButtonMovingObstacleConnection(Level.obstacles.get(Level.obstacles.size() - 2));
+
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace * 2 + horizontalBrickWidth), (int) (screenHeight * 0.83), 0);
+        Obstacle.addRedBrick(game, (int) (-interBrickSpace + horizontalBrickWidth * 2), (int) (screenHeight * 0.83), 0);
+        Obstacle.addRedBrick(game, (int) (horizontalBrickWidth * 3), (int) (screenHeight * 0.83), 0);
     }
 
 

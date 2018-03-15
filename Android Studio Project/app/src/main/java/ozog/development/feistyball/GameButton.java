@@ -9,6 +9,7 @@ public class GameButton {
 
     private boolean pressed;
     private ArrayList<DestructionBall> connectedDestructionBalls;
+    private ArrayList<Obstacle> connectedMovingObstacles;
     private ImageView image;
 
     private static int width;
@@ -37,6 +38,7 @@ public class GameButton {
 
         this.pressed = false;
         this.connectedDestructionBalls = new ArrayList<>();
+        this.connectedMovingObstacles = new ArrayList<>();
         this.image = gameButton;
 
         Level.obstacles.add(new Obstacle(oX, oY, width, heightPressed, null));
@@ -49,30 +51,30 @@ public class GameButton {
             return false;
     }
 
-    public void press() {
-        pressed = true;
-        image.setImageDrawable(Drawables.gameButtonPressed);
-        image.setMinimumHeight(heightPressed);
-    }
-
-    public void unPress() {
-        pressed = false;
-        image.setImageDrawable(Drawables.gameButtonUnpressed);
-        image.setMinimumHeight(heightUnpressed);
-    }
-
     public void toggle() {
         if (isPressed()) {
             pressed = false;
             image.setImageDrawable(Drawables.gameButtonUnpressed);
+
+            // Toggle connected destruction balls
             for (DestructionBall d: connectedDestructionBalls)
                 d.toggle();
+
+            // Toggle connected moving obstacles
+            for (Obstacle o: connectedMovingObstacles)
+                o.toggleMovement(1);
         }
         else {
             pressed = true;
             image.setImageDrawable(Drawables.gameButtonPressed);
+
+            // Toggle connected destruction balls
             for (DestructionBall d: connectedDestructionBalls)
                 d.toggle();
+
+            // Toggle connected moving obstacles
+            for (Obstacle o: connectedMovingObstacles)
+                o.toggleMovement(1);
         }
     }
 
@@ -98,6 +100,10 @@ public class GameButton {
 
     public void addButtonDestructionBallConnection(DestructionBall d) {
         this.connectedDestructionBalls.add(d);
+    }
+
+    public void addButtonMovingObstacleConnection(Obstacle o) {
+        this.connectedMovingObstacles.add(o);
     }
 
     public static void addGameButton (Context game, int x, int y) {

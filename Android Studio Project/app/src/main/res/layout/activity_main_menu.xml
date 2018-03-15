@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="12dp"
         android:visibility="visible"
-        app:srcCompat="@drawable/destination02" />
+        app:srcCompat="@drawable/logo" />
 
     <ImageView
         android:id="@+id/ballIcon"
@@ -33,19 +33,33 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="310dp"
+        android:backgroundTint="#70ff6d"
         android:onClick="openNewGame"
         android:text="New Game" />
+
+    <Button
+        android:id="@+id/btnSingleLevelMode"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnNewGame"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#ffda46"
+        android:onClick="openSingleLevelMenu"
+        android:text="Single Level Mode" />
 
     <Button
         android:id="@+id/btnScores"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnNewGame"
+        android:layout_below="@+id/btnSingleLevelMode"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorPrimary"
         android:onClick="openBestScores"
         android:text="Best scores"
@@ -59,11 +73,23 @@
         android:layout_below="@id/btnScores"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:onClick="openApplicationWebsite"
         android:text="About"
         android:textColor="@android:color/white"
         android:textColorLink="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="Ozog Development © 2018"
+        android:textSize="10sp" />
+
+
 
 </RelativeLayout>

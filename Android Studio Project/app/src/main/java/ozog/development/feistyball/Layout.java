@@ -27,6 +27,7 @@ public class Layout {
     public static TextView levelTimer;
     public static TextView finalLevelTime;
     public static TextView finalTotalTime;
+    public static TextView levelCompletedTitle;
 
     public static int screenWidth;
     public static int screenHeight;
@@ -54,5 +55,6 @@ public class Layout {
         levelTimer = game.findViewById(R.id.levelTimer);
         finalLevelTime = game.findViewById(R.id.finalLevelTime);
         finalTotalTime = game.findViewById(R.id.finalTotalTime);
+        levelCompletedTitle = game.findViewById(R.id.levelCompletedTitle);
     }
 }

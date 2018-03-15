@@ -1,5 +1,10 @@
 package ozog.development.feistyball;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.view.View;
 import android.widget.Toast;
 
 public class Messages {
@@ -8,8 +13,6 @@ public class Messages {
 
     public static void update() {
 
-        //if (Level.currentLevel == 1 && Time.levelTime == 1)
-            //Toast.makeText(MainMenu.game, "Level 1", Toast.LENGTH_SHORT).show();
         if (Level.currentLevel == 1 && Time.levelTime == 2 * 100)
             Toast.makeText(MainMenu.game, "Hit the propellers to unlock the exit point", Toast.LENGTH_LONG).show();
 
@@ -33,5 +36,7 @@ public class Messages {
         if (Level.currentLevel == 7 && Time.levelTime == 1 * 100)
             Toast.makeText(MainMenu.game, "Level 7", Toast.LENGTH_SHORT).show();
 
+        if (Level.currentLevel == 8 && Time.levelTime == 1 * 100)
+            Toast.makeText(MainMenu.game, "Use the button to open the locked gate", Toast.LENGTH_LONG).show();
     }
 }

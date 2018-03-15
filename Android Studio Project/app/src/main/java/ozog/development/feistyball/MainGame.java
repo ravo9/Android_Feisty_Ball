@@ -1,8 +1,11 @@
 package ozog.development.feistyball;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,10 +14,12 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainGame extends AppCompatActivity implements SensorEventListener {
@@ -23,6 +28,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     public static Context c;
     public static MainGame game;
     public static FrameLayout windowLevelComplited;
+    // Game mode may take values:'singleLevel', 'fullGame'.
+    public static String gameMode;
+    public static int singleLevelNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +53,15 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
         windowLevelComplited.animate().translationX(Layout.screenWidth);
 
-        Level.currentLevel = 0;
-        Level.loadNextLevel();
+        if (gameMode == "fullGame"){
 
+            Level.currentLevel = 0;
+            Level.loadNextLevel();
+        } else if (gameMode == "singleLevel") {
+
+            Level.currentLevel = singleLevelNumber - 1;
+            Level.loadNextLevel();
+        }
     }
 
     // Sensors functionality that hasn't been moved to Sensors class
@@ -94,9 +108,93 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     public void closeGame(View v) { closeGame(); }
 
     public void closeGame() {
-        Intent intent = new Intent(this, MainMenu.class);
-        startActivity(intent);
-        finish();
+
+        gameMode = "";
+        singleLevelNumber = -1;
+
+        if (isFeedbackDisplayAllowed()) {
+            displayFeedbackScreen();
+        }
+        else {
+            Intent intent = new Intent(this, MainMenu.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
+    public void displayFeedbackScreen() {
+
+        if (isFeedbackDisplayAllowed()) {
+
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+
+            //builder2.setTitle("Message from the author");
+            TextView myMsg = new TextView(this);
+            myMsg.setText("Hello! \n\n" +
+                    "I really hope you enjoyed the Feisty Ball. If you would like me to continue development of this project" +
+                    ", please leave me a short comment or rate the game on the Google Play.\n\n" +
+                    "Your opinion is the most important feedback for me.\n\n Thank you for your time!");
+            myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+            myMsg.setTextSize(16);
+            myMsg.setPadding(35, 90, 35, 90);
+            builder2.setView(myMsg);
+
+            /*builder2.setTitle("Message from the author")
+                    .setMessage("Hello! " +
+                    "I really hope you enjoyed the Feisty Ball. If you would like me to continue development of this project ( " +
+                    "and add more levels ), please leave me a short comment or rate the game in the Google Play. " +
+                    "Your opinion is the most important feedback for me. Thank you for your time!");*/
+
+            builder2.setNeutralButton("Rate now", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    String url = "https://play.google.com/store/apps/developer?id=Rafal%20Ozog&hl=en_GB";
+                    //String url = "market://details?id=<package_name>";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+
+                    // Now close the game
+                    finish();
+                }
+            });
+
+            builder2.setPositiveButton("Maybe later", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    // Now close the game
+                    Intent intent = new Intent(MainMenu.game, MainMenu.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder2.setNegativeButton("No, thanks", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    blockFeedbackDisplay();
+
+                    // Now close the game
+                    Intent intent = new Intent(MainMenu.game, MainMenu.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            AlertDialog dialog2 = builder2.create();
+            dialog2.show();
+        }
+    }
+
+    public static boolean isFeedbackDisplayAllowed() {
+        MainMenu.displayFeedbackStatus = MainMenu.game.getSharedPreferences("displayFeedbackStatus", Context.MODE_PRIVATE);
+        return (!MainMenu.displayFeedbackStatus.contains("status_blocked"));
+    }
+
+    public static void blockFeedbackDisplay() {
+        MainMenu.displayFeedbackStatus = MainMenu.game.getSharedPreferences("displayFeedbackStatus", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = MainMenu.displayFeedbackStatus.edit();
+        editor.putString("status_blocked", "status_blocked");
+        editor.apply();
+    }
 }
+

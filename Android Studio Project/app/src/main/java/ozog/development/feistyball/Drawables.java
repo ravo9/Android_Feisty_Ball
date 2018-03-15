@@ -8,6 +8,7 @@ import java.io.InputStream;
 public class Drawables {
 
     public static Drawable brickImageHorizontal;
+    public static Drawable greyBrickImageHorizontal;
     public static Drawable brickImageVertical;
     public static Drawable propellerImage;
     public static Drawable destinationImage;
@@ -17,12 +18,15 @@ public class Drawables {
     public static Drawable bonus6SecondImage;
     public static Drawable gameButtonPressed;
     public static Drawable gameButtonUnpressed;
+    public static Drawable logo;
 
     public static void uploadImages(Context game) {
 
         try {
             InputStream stream = game.getAssets().open("brick_h.png");
             brickImageHorizontal = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("grey_brick_h.png");
+            greyBrickImageHorizontal = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("brick_v.png");
             brickImageVertical = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("propeller.png");
@@ -41,6 +45,8 @@ public class Drawables {
             gameButtonPressed = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("button_off.png");
             gameButtonUnpressed = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("logo.png");
+            logo = Drawable.createFromStream(stream, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

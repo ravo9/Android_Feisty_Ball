@@ -54,7 +54,7 @@ public class Mechanics {
             Layout.ball.setY(newY);
         } else if (isObstacleAreaThere(newX, newY) == true && bumpingFreezer <= 0) {
 
-            // This is the code of slight bump after the ball cannot move (e.g. the inter-brick space).
+            /*// This is the code of slight bump after the ball cannot move (e.g. the inter-brick space).
             if (currentX > newX)
                 newX = currentX + (currentX-newX);
             else if (currentX < newX)
@@ -67,7 +67,7 @@ public class Mechanics {
             Layout.ball.setY( newY );
 
             // Freeze the bumping (100 is 1 second)
-            bumpingFreezer = 100;
+            bumpingFreezer = 100;*/
         }
 
         bumpingFreezer--;
@@ -206,21 +206,25 @@ public class Mechanics {
         float distanceY = ballY - closestY;
 
         // 100 is a ball radius
-        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(100, 2);
+        //return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(100, 2);
+
+        // This versios works smoother.
+        return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) + 3 < Math.pow(100, 2);
     }
 
     // 'The coding daddy' function
     public static float clamp(float value, float min, float max) {
+
         float x = value;
-        if (x < min) {
+        if (x < min)
             x = min;
-        } else if (x > max) {
+        else if (x > max)
             x = max;
-        }
         return x;
     }
 
     public static void bonusAchieved (int value) {
+
         Time.gameTime -= value * 100;
         Time.levelTime -= value * 100;
         Toast.makeText(MainGame.c, "-" + value + " seconds!", Toast.LENGTH_SHORT).show();
