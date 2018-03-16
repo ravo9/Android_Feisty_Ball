@@ -28,7 +28,7 @@ public class Level{
         brickShort = (int) (brickLong * 0.25);
         interBrickSpace = (int) (brickLong * 0.05);
         currentLevel = 0;
-        lastLevelNumber = 8;
+        lastLevelNumber = 10;
 
         obstacles = new ArrayList<>();
         propellers = new ArrayList<>();
@@ -102,6 +102,7 @@ public class Level{
         switch (currentLevel) {
             case 0:
                 Time.gameTime = 0;
+                //setLevel10();
                 setLevel1();
                 break;
             case 1:
@@ -124,6 +125,12 @@ public class Level{
                 break;
             case 7:
                 setLevel8();
+                break;
+            case 8:
+                setLevel9();
+                break;
+            case 9:
+                setLevel10();
                 break;
         }
 
@@ -550,6 +557,91 @@ public class Level{
         Obstacle.addRedBrick( (int) (-interBrickSpace * 2 + brickLong), (int) (screenHeight * 0.83), 0);
         Obstacle.addRedBrick( (int) (-interBrickSpace + brickLong * 2), (int) (screenHeight * 0.83), 0);
         Obstacle.addRedBrick( (int) (brickLong * 3), (int) (screenHeight * 0.83), 0);
+    }
+
+    public static void setLevel9() {
+
+        float ballPositionX = (float) (screenWidth * 0.6);
+        float ballPositionY = (float) (screenHeight * 0.36);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.53);
+        float destinationPositionY = (float) (screenHeight * 0.5);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        Obstacle.addWalls();
+
+        Propeller.addPropeller( (int) (screenWidth * 0.86), (int) (screenHeight * 0.42));
+        Propeller.addPropeller( (int) (screenWidth * 0.22), (int) (screenHeight * 0.05));
+        Propeller.addPropeller( (int) (screenWidth * 0.32), (int) (screenHeight * 0.91));
+
+        Obstacle.addRedBrick( (int) (screenWidth * 0.37 - (brickLong + interBrickSpace)), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick( (int) (screenWidth * 0.37), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick( (int) (screenWidth * 0.37 + brickLong + interBrickSpace), (int) (screenHeight * 0.45), 0);
+
+        Obstacle.addRedBrick((int) (screenWidth * 0.37 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.3 - (brickLong + interBrickSpace)), 1);
+        Obstacle.addRedBrick((int) (screenWidth * 0.37 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.3), 1);
+        Obstacle.addRedBrick((int) (screenWidth * 0.37 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.3 + (brickLong + interBrickSpace)), 1);
+        Obstacle.addRedBrick((int) (screenWidth * 0.37 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.3 + 2 * (brickLong + interBrickSpace)), 1);
+        Obstacle.addRedBrick((int) (screenWidth * 0.37 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.3 + 3 * (brickLong + interBrickSpace)), 1);
+
+        DestructionBall.addDestructionBall( (int) (screenWidth * 0.18), (int) (0), (float)(1));
+
+        GameButton.addGameButton( (int) (screenWidth * 0.34), (int) (screenHeight * 0.45 + brickShort ));
+        gameButtons.get(0).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
+    }
+
+    public static void setLevel10() {
+
+        float ballPositionX = (float) (screenWidth * 0.6);
+        float ballPositionY = (float) (screenHeight * 0.36);
+        setBallPosition(ballPositionX, ballPositionY);
+
+        float destinationPositionX = (float) (screenWidth * 0.05);
+        float destinationPositionY = (float) (screenHeight * 0.84);
+        setDestinationPosition(destinationPositionX, destinationPositionY);
+
+        Obstacle.addWalls();
+
+        Propeller.addPropeller( (int) (screenWidth * 0.82), (int) (screenHeight * 0.43));
+        Propeller.addPropeller( (int) (screenWidth * 0.08), (int) (screenHeight * 0.28));
+
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05), (int) (screenHeight * 0.15), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + (brickLong + interBrickSpace)), (int) (screenHeight * 0.15), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.15), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 3 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.15), 0);
+
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + (brickLong + interBrickSpace)), (int) (screenHeight * 0.30), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.30), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 3 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.30), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 4 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.30), 0);
+
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + (brickLong + interBrickSpace)), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.45), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 3 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.45), 0);
+
+        Obstacle.addGreyBrick((int) ( -screenWidth * 0.05), (int) (screenHeight * 0.6), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + (brickLong + interBrickSpace)), (int) (screenHeight * 0.6), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.6), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 3 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.6), 0);
+        Obstacle.addRedBrick((int) ( screenWidth * 0.05 + 4 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.6), 0);
+
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05), (int) (screenHeight * 0.75), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + (brickLong + interBrickSpace)), (int) (screenHeight * 0.75), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 2 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.75), 0);
+        Obstacle.addRedBrick((int) ( -screenWidth * 0.05 + 3 * (brickLong + interBrickSpace)), (int) (screenHeight * 0.75), 0);
+
+        DestructionBall.addDestructionBall( (int) (screenWidth * 0.7), (int) (screenHeight * 0.97), (float)(1));
+        Level.destructionBalls.get(0).rotate180();
+
+        Layout.bonus01.setX((float) (screenWidth * 0.73));
+        Layout.bonus01.setY((float) (screenHeight * 0.9));
+
+        GameButton.addGameButton( (int) (screenWidth * 0.2), (int) (screenHeight * 0));
+        GameButton.addGameButton( (int) (screenWidth * 0.03), (int) (screenHeight * 0.75 + brickShort));
+        gameButtons.get(0).addButtonMovingObstacleConnection(Level.obstacles.get(Level.obstacles.size() - 11));
+        gameButtons.get(1).addButtonDestructionBallConnection(Level.destructionBalls.get(0));
+
     }
 
 

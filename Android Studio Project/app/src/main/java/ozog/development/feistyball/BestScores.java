@@ -110,10 +110,18 @@ public class BestScores extends AppCompatActivity {
 
         for (int i = Level.lastLevelNumber; i > 0; i--) {
             int record = getRecord(i);
-            if (record == -1)
-                recordsListString.add("Level " + i + ":                             " + "00:00:00");
-            else
-                recordsListString.add("Level " + i + ":                             " + Time.displayTime(record));
+            if (record == -1) {
+                if ( i < 10)
+                    recordsListString.add("Level " + i + ":                             " + "00:00:00");
+                else
+                    recordsListString.add("Level " + i + ":                           " + "00:00:00");
+            }
+            else {
+                if ( i < 10)
+                    recordsListString.add("Level " + i + ":                             " + Time.displayTime(record));
+                else
+                    recordsListString.add("Level " + i + ":                           " + Time.displayTime(record));
+            }
         }
 
         arrayAdapter.notifyDataSetChanged();

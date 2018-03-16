@@ -38,5 +38,8 @@ public class Messages {
 
         if (Level.currentLevel == 8 && Time.levelTime == 1 * 100)
             Toast.makeText(MainMenu.game, "Use the button to open the locked gate", Toast.LENGTH_LONG).show();
+
+        if (Level.currentLevel == 9 && Time.levelTime == 1 * 100)
+            Toast.makeText(MainMenu.game, "Level 9", Toast.LENGTH_SHORT).show();
     }
 }

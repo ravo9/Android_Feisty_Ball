@@ -60,10 +60,18 @@ public class SingleLevelMenu extends AppCompatActivity {
 
         for (int i = Level.lastLevelNumber; i > 0; i--) {
             int record = BestScores.getRecord(i);
-            if (record == -1)
-                levelsListString.add("Level " + i + ":                             " + "00:00:00");
-            else
-                levelsListString.add("Level " + i + ":                             " + Time.displayTime(record));
+            if (record == -1){
+                if ( i < 10)
+                    levelsListString.add("Level " + i + ":                             " + "00:00:00");
+                else
+                    levelsListString.add("Level " + i + ":                           " + "00:00:00");
+            }
+            else {
+                if ( i < 10)
+                    levelsListString.add("Level " + i + ":                             " + Time.displayTime(record));
+                else
+                    levelsListString.add("Level " + i + ":                           " + Time.displayTime(record));
+            }
         }
 
         arrayAdapter.notifyDataSetChanged();
