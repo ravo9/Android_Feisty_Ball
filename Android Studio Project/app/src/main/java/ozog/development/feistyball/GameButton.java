@@ -1,8 +1,6 @@
 package ozog.development.feistyball;
 
-import android.content.Context;
 import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 public class GameButton {
@@ -22,9 +20,9 @@ public class GameButton {
         heightUnpressed = (int) (width * 0.3);
     }
 
-    GameButton (Context game, int oX, int oY) {
+    GameButton (int oX, int oY) {
 
-        ImageView gameButton = new ImageView(game);
+        ImageView gameButton = new ImageView(MainMenu.game);
 
         gameButton.setMinimumWidth(width);
         gameButton.setMinimumHeight(heightUnpressed);
@@ -45,37 +43,28 @@ public class GameButton {
     }
 
     public boolean isPressed() {
-        if ( pressed )
-            return true;
-        else
-            return false;
+        if ( pressed ) return true;
+        else return false;
     }
 
     public void toggle() {
+
         if (isPressed()) {
             pressed = false;
             image.setImageDrawable(Drawables.gameButtonUnpressed);
-
-            // Toggle connected destruction balls
-            for (DestructionBall d: connectedDestructionBalls)
-                d.toggle();
-
-            // Toggle connected moving obstacles
-            for (Obstacle o: connectedMovingObstacles)
-                o.toggleMovement(1);
         }
         else {
             pressed = true;
             image.setImageDrawable(Drawables.gameButtonPressed);
-
-            // Toggle connected destruction balls
-            for (DestructionBall d: connectedDestructionBalls)
-                d.toggle();
-
-            // Toggle connected moving obstacles
-            for (Obstacle o: connectedMovingObstacles)
-                o.toggleMovement(1);
         }
+
+        // Toggle connected destruction balls
+        for (DestructionBall d: connectedDestructionBalls)
+            d.toggle();
+
+        // Toggle connected moving obstacles
+        for (Obstacle o: connectedMovingObstacles)
+            o.toggleMovement(1);
     }
 
     public int getButtonX() {
@@ -106,8 +95,8 @@ public class GameButton {
         this.connectedMovingObstacles.add(o);
     }
 
-    public static void addGameButton (Context game, int x, int y) {
+    public static void addGameButton (int x, int y) {
 
-        Level.gameButtons.add(new GameButton(game, x, y));
+        Level.gameButtons.add(new GameButton(x, y));
     }
 }

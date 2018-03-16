@@ -22,7 +22,7 @@ public class Sensors {
         mAccelerometerData = new float[3];
         mMagnetometerData = new float[3];
 
-        sensorManager = (SensorManager)MainGame.c.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager)MainMenu.game.getSystemService(Context.SENSOR_SERVICE);
         mSensorAccelerometer = sensorManager.getDefaultSensor(
                 Sensor.TYPE_ACCELEROMETER);
         mSensorMagnetometer = sensorManager.getDefaultSensor(
@@ -50,8 +50,6 @@ public class Sensors {
         boolean rotationOK = SensorManager.getRotationMatrix(Sensors.rotationMatrix,
                 null, Sensors.mAccelerometerData, Sensors.mMagnetometerData);
 
-        if (rotationOK) {
-            SensorManager.getOrientation(Sensors.rotationMatrix, Sensors.orientationValues);
-        }
+        if (rotationOK) SensorManager.getOrientation(Sensors.rotationMatrix, Sensors.orientationValues);
     }
 }

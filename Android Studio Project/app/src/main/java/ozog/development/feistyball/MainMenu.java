@@ -14,7 +14,7 @@ import android.view.animation.RotateAnimation;
 
 public class MainMenu extends AppCompatActivity {
 
-    private RotateAnimation rotate, rotate2;
+    private RotateAnimation rotate;
     public static Context game;
     public static SharedPreferences displayFeedbackStatus;
 
@@ -28,19 +28,24 @@ public class MainMenu extends AppCompatActivity {
         // Upload connections to the layout elements
         Layout.loadLayoutElementsConnections(this);
 
-        // Destination icon
+        setDestinationIconAnimation();
+        setBallIconAnimation();
+    }
+
+    public void setDestinationIconAnimation() {
         rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
                 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(10000);
         rotate.setRepeatCount(Animation.INFINITE);
         Layout.destinationIcon.setAnimation(rotate);
+    }
 
-        // Ball icon
-        rotate2 = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
+    public void setBallIconAnimation() {
+        rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF,
                 -2.1f, Animation.RELATIVE_TO_SELF, -0.6f);
-        rotate2.setDuration(8000);
-        rotate2.setRepeatCount(Animation.INFINITE);
-        Layout.ballIcon.setAnimation(rotate2);
+        rotate.setDuration(8000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        Layout.ballIcon.setAnimation(rotate);
     }
 
     public void openNewGame(View v){
@@ -70,9 +75,5 @@ public class MainMenu extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
-    }
-
-    public void close() {
-        finish();
     }
 }

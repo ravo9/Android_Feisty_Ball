@@ -2,7 +2,6 @@ package ozog.development.feistyball;
 
 import java.util.Timer;
 import android.os.Handler;
-import android.view.View;
 
 public class Time {
 
@@ -30,8 +29,8 @@ public class Time {
     }
 
     public static String displayTime(int time) {
-        int minutes = (int)time/6000;
-        int seconds = (int)(time - 6000 * minutes)/100;
+        int minutes = time/6000;
+        int seconds = (time - 6000 * minutes)/100;
         int centiseconds = time - 6000 * minutes - 100 * seconds;
 
         String min = Integer.toString(minutes);

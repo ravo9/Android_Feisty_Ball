@@ -3,21 +3,17 @@ package ozog.development.feistyball;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class SingleLevelMenu extends AppCompatActivity {
 
     private ListView levelList;
-    private RelativeLayout rl;
     private Button btnPlay;
 
     private int chosenLevel;
@@ -35,7 +31,7 @@ public class SingleLevelMenu extends AppCompatActivity {
 
         levelsListString = new ArrayList<>();
         levelList = this.findViewById(R.id.levelList);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, levelsListString);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, levelsListString);
         levelList.setAdapter(arrayAdapter);
 
         displayListUpdate();
@@ -45,7 +41,6 @@ public class SingleLevelMenu extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-
                 btnPlay.setEnabled(true);
                 chosenLevel = Level.lastLevelNumber - position;
             }
@@ -65,9 +60,8 @@ public class SingleLevelMenu extends AppCompatActivity {
 
         for (int i = Level.lastLevelNumber; i > 0; i--) {
             int record = BestScores.getRecord(i);
-            if (record == -1){
+            if (record == -1)
                 levelsListString.add("Level " + i + ":                             " + "00:00:00");
-            }
             else
                 levelsListString.add("Level " + i + ":                             " + Time.displayTime(record));
         }

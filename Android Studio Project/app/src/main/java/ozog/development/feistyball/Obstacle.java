@@ -1,7 +1,5 @@
 package ozog.development.feistyball;
 
-import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 
 public class Obstacle {
@@ -42,9 +40,9 @@ public class Obstacle {
 
     public void setImage(ImageView img) { image = img; }
 
-    public static void addRedBrick(Context game, int x, int y, int orientation) {
+    public static void addRedBrick(int x, int y, int orientation) {
 
-        ImageView brick = new ImageView(game);
+        ImageView brick = new ImageView(MainMenu.game);
 
         int brickWidth = 0;
         int brickHeight = 0;
@@ -63,9 +61,6 @@ public class Obstacle {
         brick.setMinimumHeight(brickHeight);
         brick.setMinimumWidth(brickWidth);
 
-        //brick.setMaxHeight(brickHeight);
-        //brick.setMaxWidth(brickWidth);
-
         MainGame.rl.addView(brick);
 
         brick.setX(x);
@@ -74,9 +69,9 @@ public class Obstacle {
         Level.obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
     }
 
-    public static void addGreyBrick(Context game, int x, int y, int orientation) {
+    public static void addGreyBrick(int x, int y, int orientation) {
 
-        ImageView brick = new ImageView(game);
+        ImageView brick = new ImageView(MainMenu.game);
 
         int brickWidth = 0;
         int brickHeight = 0;
@@ -94,9 +89,6 @@ public class Obstacle {
 
         brick.setMinimumHeight(brickHeight);
         brick.setMinimumWidth(brickWidth);
-
-        Log.d("Brick Width", Integer.toString(brickWidth));
-        Log.d("Brick Height", Integer.toString(brickHeight));
 
         MainGame.rl.addView(brick);
 

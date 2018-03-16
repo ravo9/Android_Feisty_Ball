@@ -1,7 +1,5 @@
 package ozog.development.feistyball;
 
-import android.content.Context;
-import android.media.Image;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -13,8 +11,6 @@ public class DestructionBall {
     private int originY;
     // 1 means going up; -1 means going down
     private int movementWay;
-    // 1 means open, 0 - hidden
-    private float movementState;
     private ImageView image;
 
     private static int width;
@@ -27,9 +23,9 @@ public class DestructionBall {
         speed = 5;
     }
 
-    DestructionBall (Context game, int oX, int oY, float movementState) {
+    DestructionBall (int oX, int oY, float movementState) {
 
-        ImageView destructionBall = new ImageView(game);
+        ImageView destructionBall = new ImageView(MainMenu.game);
 
         destructionBall.setMinimumWidth(width);
         destructionBall.setMinimumHeight(height);
@@ -50,7 +46,6 @@ public class DestructionBall {
 
 
         this.image = destructionBall;
-        this.movementState = movementState;
 
         // Initial position
         this.image.setY(this.image.getY() -  movementState * height);
@@ -62,7 +57,7 @@ public class DestructionBall {
     public static void updateMovementState() {
 
         for (DestructionBall d: Level.destructionBalls) {
-            if (d.switchedOn == true) {
+            if (d.switchedOn) {
 
                 if ( d.movementWay == -1 ) {
                     if (d.image.getY() < d.originY) {
@@ -105,11 +100,6 @@ public class DestructionBall {
         ballCenterY = (int) (this.image.getY() + 0.5 * width);
     }
 
-    public void rotate90() {
-        image.setRotation(90);
-        ballCenterY = (int) (this.image.getY() + 0.5 * width);
-    }
-
     public boolean isSwitchedOn() {
         if ( switchedOn )
             return true;
@@ -124,7 +114,7 @@ public class DestructionBall {
 
         Time.gameTime += 10 * 100;
         Time.levelTime += 10 * 100;
-        Toast.makeText(MainGame.c, "Penalty: +" + 10 + " seconds!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainMenu.game, "Penalty: +" + 10 + " seconds!", Toast.LENGTH_SHORT).show();
     }
 
     public void switchOff() {
@@ -140,8 +130,8 @@ public class DestructionBall {
 
     public static void setSpeed(int s) { speed = s; }
 
-    public static void addDestructionBall (Context game, int x, int y, float movementState) {
+    public static void addDestructionBall (int x, int y, float movementState) {
 
-        Level.destructionBalls.add(new DestructionBall(game, x, y, movementState));
+        Level.destructionBalls.add(new DestructionBall(x, y, movementState));
     }
 }

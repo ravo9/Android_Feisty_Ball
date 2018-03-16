@@ -1,6 +1,5 @@
 package ozog.development.feistyball;
 
-import android.view.View;
 import android.widget.Toast;
 
 public class Mechanics {
@@ -10,14 +9,10 @@ public class Mechanics {
     private static float ballCenterPointX, ballCenterPointY;
     private static int blackHoleFreezer;
     private static int buttonFreezer;
-    private static int bumpingFreezer;
-    private static boolean isBonus01Achieved;
 
     static {
         blackHoleFreezer = 0;
         buttonFreezer = 0;
-        bumpingFreezer = 0;
-        isBonus01Achieved = false;
     }
 
     public static void update() {
@@ -45,32 +40,14 @@ public class Mechanics {
     // Check if there is any obstacle (e.g. brick)
     public static void isObstacleThere() {
 
-        if (isObstacleAreaThere(newX, newY) == false) {
+        if (!isObstacleAreaThere(newX, newY)) {
             Layout.ball.setX( newX );
             Layout.ball.setY( newY );
-        } else if (isObstacleAreaThere(newX, currentY) == false) {
+        } else if (!isObstacleAreaThere(newX, currentY)) {
             Layout.ball.setX( newX );
-        } else if (isObstacleAreaThere(currentX, newY) == false) {
+        } else if (!isObstacleAreaThere(currentX, newY)) {
             Layout.ball.setY(newY);
-        } else if (isObstacleAreaThere(newX, newY) == true && bumpingFreezer <= 0) {
-
-            /*// This is the code of slight bump after the ball cannot move (e.g. the inter-brick space).
-            if (currentX > newX)
-                newX = currentX + (currentX-newX);
-            else if (currentX < newX)
-                newX = currentX - (newX-currentX);
-            if (currentY > newY)
-                newY = currentY + (currentY-newY);
-            else if (currentY < newY)
-                newY = currentY - (newY-currentY);
-            Layout.ball.setX( newX );
-            Layout.ball.setY( newY );
-
-            // Freeze the bumping (100 is 1 second)
-            bumpingFreezer = 100;*/
         }
-
-        bumpingFreezer--;
     }
 
     // Check if there is a propeller
@@ -124,7 +101,6 @@ public class Mechanics {
     public static void isDestructionBallThere() {
 
         float r = (float) (DestructionBall.getBlackBallRadius() * 1.25);
-
         for (DestructionBall d: Level.destructionBalls) {
             if (ballCenterPointX > d.getBlackBallCenterX() - r && ballCenterPointX < d.getBlackBallCenterX() + r) {
                 if (ballCenterPointY > d.getBlackBallCenterY() - r && ballCenterPointY < d.getBlackBallCenterY() + r) {
@@ -144,7 +120,6 @@ public class Mechanics {
             float ballCenterY = Layout.ball.getY() + 100;
 
             for (GameButton g: Level.gameButtons) {
-
                 if (collides(ballCenterX, ballCenterY, g.getButtonX(), g.getButtonY(),
                         GameButton.getButtonWidth(), GameButton.getButtonHeight() + 5)) {
                     g.toggle();
@@ -190,7 +165,7 @@ public class Mechanics {
             // Check if the destination has been achieved.
             if (ballCenterPointX > Layout.destination.getX() +  175 - 50 && ballCenterPointX < Layout.destination.getX() + 175 + 50) {
                 if (ballCenterPointY > Layout.destination.getY() + 175 - 50 && ballCenterPointY < Layout.destination.getY() + 175 +50) {
-                    Level.levelComplited(MainGame.rl);
+                    Level.levelCompleted(MainGame.rl);
                 }
             }
         }
@@ -206,9 +181,7 @@ public class Mechanics {
         float distanceY = ballY - closestY;
 
         // 100 is a ball radius
-        //return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) < Math.pow(100, 2);
-
-        // This versios works smoother.
+        // '+3' makes the ball moving smoother on edges.
         return Math.pow(distanceX, 2) + Math.pow(distanceY, 2) + 3 < Math.pow(100, 2);
     }
 
@@ -227,12 +200,9 @@ public class Mechanics {
 
         Time.gameTime -= value * 100;
         Time.levelTime -= value * 100;
-        Toast.makeText(MainGame.c, "-" + value + " seconds!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainMenu.game, "-" + value + " seconds!", Toast.LENGTH_SHORT).show();
         Layout.bonus01.setX(-500);
     }
 
-    public static void updateDestructionBallsMovement() {
-
-        DestructionBall.updateMovementState();
-    }
+    public static void updateDestructionBallsMovement() { DestructionBall.updateMovementState(); }
 }

@@ -1,6 +1,5 @@
 package ozog.development.feistyball;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,19 +12,16 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     public static RelativeLayout rl;
-    public static Context c;
     public static MainGame game;
     public static FrameLayout windowLevelComplited;
     // Game mode may take values:'singleLevel', 'fullGame'.
@@ -38,7 +34,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         setContentView(R.layout.activity_main_game);
 
         rl = findViewById(R.id.RelativeLayout1);
-        c = getApplicationContext();
+
         game = this;
         windowLevelComplited = findViewById(R.id.windowLevelComplited);
 
@@ -90,8 +86,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-    }
+    public void onAccuracyChanged(Sensor sensor, int i) {}
 
     @Override
     public void onBackPressed() {
@@ -128,7 +123,6 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
             AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
 
-            //builder2.setTitle("Message from the author");
             TextView myMsg = new TextView(this);
             myMsg.setText("Hello! \n\n" +
                     "I really hope you enjoyed the Feisty Ball. If you would like me to continue development of this project" +
@@ -138,12 +132,6 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             myMsg.setTextSize(16);
             myMsg.setPadding(35, 90, 35, 90);
             builder2.setView(myMsg);
-
-            /*builder2.setTitle("Message from the author")
-                    .setMessage("Hello! " +
-                    "I really hope you enjoyed the Feisty Ball. If you would like me to continue development of this project ( " +
-                    "and add more levels ), please leave me a short comment or rate the game in the Google Play. " +
-                    "Your opinion is the most important feedback for me. Thank you for your time!");*/
 
             builder2.setNeutralButton("Rate now", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -162,27 +150,26 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             builder2.setPositiveButton("Maybe later", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    // Now close the game
-                    Intent intent = new Intent(MainMenu.game, MainMenu.class);
-                    startActivity(intent);
-                    finish();
+                    leaveGameActivity();
                 }
             });
 
             builder2.setNegativeButton("No, thanks", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     blockFeedbackDisplay();
-
-                    // Now close the game
-                    Intent intent = new Intent(MainMenu.game, MainMenu.class);
-                    startActivity(intent);
-                    finish();
+                    leaveGameActivity();
                 }
             });
 
             AlertDialog dialog2 = builder2.create();
             dialog2.show();
         }
+    }
+
+    public void leaveGameActivity() {
+        Intent intent = new Intent(MainMenu.game, MainMenu.class);
+        startActivity(intent);
+        finish();
     }
 
     public static boolean isFeedbackDisplayAllowed() {
