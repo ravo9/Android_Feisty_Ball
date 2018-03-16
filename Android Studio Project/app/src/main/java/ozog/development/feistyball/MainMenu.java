@@ -70,8 +70,7 @@ public class MainMenu extends AppCompatActivity {
 
     public void openApplicationWebsite(View v) {
 
-        String url = "https://play.google.com/store/apps/developer?id=Rafal%20Ozog&hl=en_GB";
-        //String url = "market://details?id=<package_name>";
+        String url = "market://details?id=ozog.development.feistyball";
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
