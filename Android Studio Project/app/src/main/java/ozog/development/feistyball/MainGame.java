@@ -94,9 +94,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
         closeGame();
     }
 
-    public void loadNextLevel(View v) {
-        Level.loadNextLevel();
-    }
+    public void loadNextLevel(View v) { Level.loadNextLevel(); }
 
     public void restartLevel(View v) { Level.restartLevel(); }
 

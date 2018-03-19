@@ -1,5 +1,6 @@
 package ozog.development.feistyball;
 
+import android.util.Log;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -202,6 +203,20 @@ public class Level{
         resetGameElements();
         BestScores.updateBestScores();
         loadInterLevelMenu();
+
+        // AdSense
+        if (currentLevel == 2 || currentLevel == 4 || currentLevel == 6 || currentLevel == 8 || currentLevel == 10)
+            loadGoogleAdSense();
+    }
+
+    public static void loadGoogleAdSense() {
+
+        if (MainMenu.mInterstitialAd.isLoaded()) {
+            MainMenu.mInterstitialAd.show();
+            Log.d("TAG", "The interstitial has been loaded.");
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
     }
 
     public static void resetGameElements() {
