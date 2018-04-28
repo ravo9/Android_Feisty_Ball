@@ -1,0 +1,13 @@
+1. Kulka powinna poruszaæ siê szybciej (Sylwia i Szymek) oraz nie zacinaæ siê, nawet
+minimalnie.
+
+2. Czy ta gra zaczyna siê zacinaæ ko³o levelu 7, 8 (gdy gramy od pocz¹tku)?
+
+3. Po zdobyciu bonusa mo¿e wyst¹piæ czas ujemny.
+
+4. zmienilem tempo mechaniki na 2x ( z 10 na 5 centisec) i teraz destruction ballas zapierdalaja 2x szybciej - podobnie propellers itp
+tempo kulki tez sie zmienilo, mialo wczesniej wartosc 10 przy 10 centysekundach
+
+5. Pilka i wszystko musi miec rozmiar relatywny (za duza pilka u Kamila, Monka).
+
+6. 
