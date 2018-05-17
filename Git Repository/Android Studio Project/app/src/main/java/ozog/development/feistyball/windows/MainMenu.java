@@ -64,10 +64,8 @@ public class MainMenu extends AppCompatActivity {
 
     public void openNewGame(View v){
 
-        Intent intent = new Intent(this, MainGame.class);
+        Intent intent = new Intent(this, IntroductionScreen.class);
         startActivity(intent);
-        MainGame.gameMode = "fullGame";
-        MainGame.singleLevelNumber = -1;
         finish();
     }
 

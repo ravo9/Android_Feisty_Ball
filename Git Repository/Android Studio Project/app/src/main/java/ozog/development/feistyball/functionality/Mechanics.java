@@ -29,6 +29,8 @@ public class Mechanics {
         buttonFreezer = 0;
         ballRadius = Ball.ballRadius;
         blackHoleRadius = BlackHole.blackHoleRadius;
+        destinationCenterPointX = (int) (Destination.destination.getX() + Destination.destinationLength * 0.5);
+        destinationCenterPointY = (int) (Destination.destination.getY() + Destination.destinationLength * 0.5);
     }
 
     public static void update() {
@@ -41,10 +43,6 @@ public class Mechanics {
 
         ballCenterPointX = currentX + ballRadius;
         ballCenterPointY = currentY + ballRadius;
-
-        // It doesnt have to be constantly updated
-        destinationCenterPointX = (int) (Destination.destination.getX() + Destination.destinationLength * 0.5);
-        destinationCenterPointY = (int) (Destination.destination.getY() + Destination.destinationLength * 0.5);
 
         updatePropellersRotation();
         updateDestructionBallsMovement();
@@ -164,7 +162,7 @@ public class Mechanics {
     // Check if there is a destruction ball
     public static void isDestructionBallThere() {
 
-        float reactionRange = (float) (DestructionBall.getBlackBallRadius() * 1.25);
+        float reactionRange = (float)(DestructionBall.getBlackBallRadius() * 1.25);
 
         for (DestructionBall d: Level.destructionBalls) {
             if (ballCenterPointX > d.getBlackBallCenterX() - reactionRange && ballCenterPointX < d.getBlackBallCenterX() + reactionRange) {

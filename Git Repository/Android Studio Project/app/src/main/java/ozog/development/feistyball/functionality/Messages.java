@@ -11,14 +11,16 @@ public class Messages {
 
     public static void update() {
 
-        if (Level.currentLevel == 1 && Time.levelTime == 2 * 100)
+        /*if (Level.currentLevel == 1 && Time.levelTime == 2 * 100)
             Toast.makeText(MainMenu.game, "Hit the propellers to unlock the exit point", Toast.LENGTH_LONG).show();
 
         if (Level.currentLevel == 1 && Propeller.allPropellersSwitchedOn() && !flagStop01){
             Toast.makeText(MainMenu.game, "Now go to the exit point!", Toast.LENGTH_SHORT).show();
             flagStop01 = true;
-        }
+        }*/
 
+        if (Level.currentLevel == 1 && Time.levelTime == 1 * 100)
+            Toast.makeText(MainMenu.game, "Level 1", Toast.LENGTH_SHORT).show();
         if (Level.currentLevel == 2 && Time.levelTime == 1 * 100)
             Toast.makeText(MainMenu.game, "Level 2", Toast.LENGTH_SHORT).show();
         if (Level.currentLevel == 3 && Time.levelTime == 1 * 100)

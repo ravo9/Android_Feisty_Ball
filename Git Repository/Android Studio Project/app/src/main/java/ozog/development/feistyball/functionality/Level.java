@@ -33,6 +33,7 @@ public class Level{
 
     public static int currentLevel;
     public static int lastLevelNumber;
+
     public static ArrayList<Obstacle> obstacles;
     public static ArrayList<Propeller> propellers;
     public static ArrayList<DestructionBall> destructionBalls;
