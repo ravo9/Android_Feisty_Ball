@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
-    tools:context="ozog.development.feistyball.SingleLevelMenu">
+    tools:context="ozog.development.feistyball.windows.SingleLevelMenu">
 
     <Button
         android:id="@+id/btnPlay"
@@ -58,9 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
-        android:text="Ozog Development © 2018"
+        android:layout_marginBottom="10dp"
+        android:text="Dreamcatcher Mobile Apps © 2018"
         android:textSize="10sp" />
 
 

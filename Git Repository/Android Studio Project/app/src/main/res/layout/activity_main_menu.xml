@@ -5,7 +5,7 @@
     android:id="@+id/RelativeLayoutMainMenu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ozog.development.feistyball.MainMenu">
+    tools:context="ozog.development.feistyball.windows.MainMenu">
 
     <ImageView
         android:id="@+id/destinationIcon"
@@ -85,9 +85,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
-        android:text="Ozog Development © 2018"
+        android:layout_marginBottom="10dp"
+        android:text="Dreamcatcher Mobile Apps © 2018"
         android:textSize="10sp" />
 
 

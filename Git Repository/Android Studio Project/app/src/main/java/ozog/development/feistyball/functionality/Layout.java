@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.functionality;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -6,13 +6,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ozog.development.feistyball.R;
+import ozog.development.feistyball.game.elements.Ball;
+
 public class Layout {
 
-    public static ImageView ball;
-    public static ImageView destination;
-    public static ImageView blackHoleA;
-    public static ImageView blackHoleB;
-    public static ImageView bonus01;
     public static ImageView destinationIcon;
     public static ImageView ballIcon;
 
@@ -36,11 +34,6 @@ public class Layout {
         screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-        ball = game.findViewById(R.id.ball);
-        destination = game.findViewById(R.id.destination);
-        blackHoleA = game.findViewById(R.id.blackHoleA);
-        blackHoleB = game.findViewById(R.id.blackHoleB);
-        bonus01 = game.findViewById(R.id.bonus01);
         destinationIcon = game.findViewById(R.id.destinationIcon);
         ballIcon = game.findViewById(R.id.ballIcon);
 

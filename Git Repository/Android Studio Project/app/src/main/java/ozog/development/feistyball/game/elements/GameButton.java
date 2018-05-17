@@ -1,21 +1,27 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.game.elements;
 
 import android.widget.ImageView;
 import java.util.ArrayList;
 
+import ozog.development.feistyball.functionality.Drawables;
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.windows.MainGame;
+import ozog.development.feistyball.windows.MainMenu;
+
 public class GameButton {
 
-    private boolean pressed;
+    private boolean isPressed;
     private ArrayList<DestructionBall> connectedDestructionBalls;
     private ArrayList<Obstacle> connectedMovingObstacles;
-    private ImageView image;
+    private ImageView gameButton;
 
     private static int width;
     private static int heightPressed;
     private static int heightUnpressed;
 
     static {
-        width = (int)(Layout.screenWidth * 0.1);
+        width = (int)(Layout.screenWidth * 0.12);
         heightPressed = (int) (width * 0.27);
         heightUnpressed = (int) (width * 0.3);
     }
@@ -24,9 +30,6 @@ public class GameButton {
 
         ImageView gameButton = new ImageView(MainMenu.game);
 
-        gameButton.setMinimumWidth(width);
-        gameButton.setMinimumHeight(heightUnpressed);
-
         gameButton.setImageDrawable(Drawables.gameButtonUnpressed);
 
         gameButton.setX(oX);
@@ -34,28 +37,33 @@ public class GameButton {
 
         MainGame.rl.addView(gameButton);
 
-        this.pressed = false;
+        gameButton.getLayoutParams().width = width;
+        gameButton.getLayoutParams().height = heightUnpressed;
+
+        this.isPressed = false;
         this.connectedDestructionBalls = new ArrayList<>();
         this.connectedMovingObstacles = new ArrayList<>();
-        this.image = gameButton;
+        this.gameButton = gameButton;
 
         Level.obstacles.add(new Obstacle(oX, oY, width, heightPressed, null));
     }
 
-    public boolean isPressed() {
-        if ( pressed ) return true;
+    public boolean isisPressed() {
+        if ( isPressed ) return true;
         else return false;
     }
 
     public void toggle() {
 
-        if (isPressed()) {
-            pressed = false;
-            image.setImageDrawable(Drawables.gameButtonUnpressed);
+        if (isisPressed()) {
+            isPressed = false;
+            gameButton.setImageDrawable(Drawables.gameButtonUnpressed);
+            gameButton.getLayoutParams().height = heightUnpressed;
         }
         else {
-            pressed = true;
-            image.setImageDrawable(Drawables.gameButtonPressed);
+            isPressed = true;
+            gameButton.setImageDrawable(Drawables.gameButtonPressed);
+            gameButton.getLayoutParams().height = heightPressed;
         }
 
         // Toggle connected destruction balls
@@ -68,23 +76,24 @@ public class GameButton {
     }
 
     public int getButtonX() {
-        return (int)(image.getX());
+        return (int)(gameButton.getX());
     }
 
     public int getButtonY() {
-        return (int)(image.getY());
+        return (int)(gameButton.getY());
     }
 
     public ImageView getImage() {
-        return image;
+        return gameButton;
     }
 
-    public static int getButtonWidth() {
+    public int getButtonWidth() {
         return (int)(width);
     }
 
-    public static int getButtonHeight() {
-        return (int)(heightPressed);
+    public int getButtonHeight() {
+        if (isPressed == true) return (int)(heightPressed);
+        else return (int)(heightUnpressed);
     }
 
     public void addButtonDestructionBallConnection(DestructionBall d) {
@@ -96,7 +105,6 @@ public class GameButton {
     }
 
     public static void addGameButton (int x, int y) {
-
         Level.gameButtons.add(new GameButton(x, y));
     }
 }

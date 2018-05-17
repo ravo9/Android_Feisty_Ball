@@ -1,6 +1,12 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.game.elements;
 
 import android.widget.ImageView;
+
+import ozog.development.feistyball.functionality.Drawables;
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.windows.MainGame;
+import ozog.development.feistyball.windows.MainMenu;
 
 public class Obstacle {
 
@@ -10,6 +16,14 @@ public class Obstacle {
     private int height;
     private boolean movementSwitchedOn;
     private ImageView image;
+
+    public static final int longerBrickLength;
+    public static final int shorterBrickLenght;
+
+    static {
+        longerBrickLength = (int)(Layout.screenWidth * 0.22);
+        shorterBrickLenght = (int)(longerBrickLength * 0.25);
+    }
 
     Obstacle(int oX, int oY, int w, int h, ImageView img) {
         originX = oX;
@@ -26,9 +40,7 @@ public class Obstacle {
         return originY;
     }
 
-    public int getWidth() {
-        return width;
-    }
+    public int getWidth() { return width; }
 
     public int getHeight() {
         return height;
@@ -44,58 +56,50 @@ public class Obstacle {
 
         ImageView brick = new ImageView(MainMenu.game);
 
-        int brickWidth = 0;
-        int brickHeight = 0;
-
         if (orientation == 0) {
+            // Horizontal brick.
             brick.setImageDrawable(Drawables.brickImageHorizontal);
-            brickWidth = (int)(Layout.screenWidth * 0.2);
-            brickHeight = (int)(brickWidth * 0.25);
+            MainGame.rl.addView(brick);
+            brick.getLayoutParams().width = longerBrickLength;
+            brick.getLayoutParams().height = shorterBrickLenght;
+            Level.obstacles.add(new Obstacle(x, y, longerBrickLength, shorterBrickLenght, brick));
         }
         else if (orientation == 1) {
+            // Vertical brick.
             brick.setImageDrawable(Drawables.brickImageVertical);
-            brickHeight = (int)(Layout.screenWidth * 0.2);
-            brickWidth = (int)(brickHeight * 0.25);
+            MainGame.rl.addView(brick);
+            brick.getLayoutParams().width = shorterBrickLenght;
+            brick.getLayoutParams().height = longerBrickLength;
+            Level.obstacles.add(new Obstacle(x, y, shorterBrickLenght, longerBrickLength, brick));
         }
-
-        brick.setMinimumHeight(brickHeight);
-        brick.setMinimumWidth(brickWidth);
-
-        MainGame.rl.addView(brick);
 
         brick.setX(x);
         brick.setY(y);
-
-        Level.obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
     }
 
     public static void addGreyBrick(int x, int y, int orientation) {
 
         ImageView brick = new ImageView(MainMenu.game);
 
-        int brickWidth = 0;
-        int brickHeight = 0;
-
         if (orientation == 0) {
+            // Horizontal brick.
             brick.setImageDrawable(Drawables.greyBrickImageHorizontal);
-            brickWidth = (int)(Layout.screenWidth * 0.2);
-            brickHeight = (int)(brickWidth * 0.25);
+            MainGame.rl.addView(brick);
+            brick.getLayoutParams().width = longerBrickLength;
+            brick.getLayoutParams().height = shorterBrickLenght;
+            Level.obstacles.add(new Obstacle(x, y, longerBrickLength, shorterBrickLenght, brick));
         }
         else if (orientation == 1) {
+            // Vertical brick.
             brick.setImageDrawable(Drawables.brickImageVertical);
-            brickHeight = (int)(Layout.screenWidth * 0.2);
-            brickWidth = (int)(brickHeight * 0.25);
+            MainGame.rl.addView(brick);
+            brick.getLayoutParams().width = shorterBrickLenght;
+            brick.getLayoutParams().height = longerBrickLength;
+            Level.obstacles.add(new Obstacle(x, y, shorterBrickLenght, longerBrickLength, brick));
         }
-
-        brick.setMinimumHeight(brickHeight);
-        brick.setMinimumWidth(brickWidth);
-
-        MainGame.rl.addView(brick);
 
         brick.setX(x);
         brick.setY(y);
-
-        Level.obstacles.add(new Obstacle(x, y, brickWidth, brickHeight, brick));
     }
 
     public static void addWalls() {

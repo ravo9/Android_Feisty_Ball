@@ -1,7 +1,14 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.game.elements;
 
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import ozog.development.feistyball.functionality.Drawables;
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.functionality.Time;
+import ozog.development.feistyball.windows.MainGame;
+import ozog.development.feistyball.windows.MainMenu;
 
 public class DestructionBall {
 
@@ -18,7 +25,7 @@ public class DestructionBall {
     private static int speed;
 
     static {
-        width = (int)(Layout.screenHeight * 0.125);
+        width = (int)(Layout.screenHeight * 0.132);
         height = (int) (width * 2.25);
         speed = 5;
     }

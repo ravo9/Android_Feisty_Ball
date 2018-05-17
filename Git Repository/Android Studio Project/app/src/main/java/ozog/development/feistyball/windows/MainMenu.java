@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.windows;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,9 @@ import android.view.animation.RotateAnimation;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.AdRequest;
+
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.R;
 
 public class MainMenu extends AppCompatActivity {
 

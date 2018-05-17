@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.windows;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,6 +15,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.R;
+import ozog.development.feistyball.functionality.Time;
 
 // This class is responsible both for the BestScores Activity (especially onCreate method),
 // and for the Best Scores static interface, used e.g. for best scores checking and updating.

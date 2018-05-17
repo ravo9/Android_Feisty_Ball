@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.windows;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,6 +18,13 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import ozog.development.feistyball.functionality.Drawables;
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.R;
+import ozog.development.feistyball.functionality.Sensors;
+import ozog.development.feistyball.functionality.Time;
 
 public class MainGame extends AppCompatActivity implements SensorEventListener {
 
@@ -92,6 +99,7 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
 
     @Override
     public void onBackPressed() {
+        Time.resetTimers();
         Level.resetGameElements();
         closeGame();
     }
@@ -124,9 +132,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
 
             TextView myMsg = new TextView(this);
-            myMsg.setText("Hello! \n\n" +
-                    "I really hope you enjoyed the Feisty Ball. If you would like me to continue development of this project" +
-                    ", please leave me a short comment or rate the game on the Google Play.\n\n" +
+            myMsg.setText("Your opinion matters! \n\n" +
+                    "Would you like to rate my game?\n\n" +
                     "Your opinion is the most important feedback for me.\n\n Thank you for your time!");
             myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
             myMsg.setTextSize(16);

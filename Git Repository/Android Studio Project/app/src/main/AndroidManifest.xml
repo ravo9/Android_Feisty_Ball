@@ -13,16 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainGame" />
-        <activity android:name=".BestScores" />
-        <activity android:name=".MainMenu">
+        <activity android:name=".windows.MainGame" />
+        <activity android:name=".windows.BestScores" />
+        <activity android:name=".windows.MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SingleLevelMenu"></activity>
+        <activity android:name=".windows.SingleLevelMenu" />
+        <activity android:name=".windows.IntroductionScreen"></activity>
     </application>
 
 </manifest>

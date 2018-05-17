@@ -1,6 +1,12 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.game.elements;
 
 import android.widget.ImageView;
+
+import ozog.development.feistyball.functionality.Drawables;
+import ozog.development.feistyball.functionality.Layout;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.windows.MainGame;
+import ozog.development.feistyball.windows.MainMenu;
 
 public class Propeller {
 
@@ -8,10 +14,10 @@ public class Propeller {
     private int originX;
     private int originY;
     private ImageView image;
-    private static int propellerLength;
+    public static int propellerLength;
 
     static {
-        propellerLength = (int)(Layout.screenWidth * 0.12);
+        propellerLength = (int)(Layout.screenWidth * 0.18);
     }
 
     Propeller(int oX, int oY, ImageView img) {
@@ -50,15 +56,17 @@ public class Propeller {
     public static void addPropeller(int x, int y) {
 
         ImageView propeller = new ImageView(MainMenu.game);
+
         propeller.setImageDrawable(Drawables.propellerImage);
 
-        propeller.setMinimumHeight(propellerLength);
-        propeller.setMinimumWidth(propellerLength);
+        MainGame.rl.addView(propeller);
+
+        propeller.getLayoutParams().width = propellerLength;
+        propeller.getLayoutParams().height = propellerLength;
 
         propeller.setX(x);
         propeller.setY(y);
 
-        MainGame.rl.addView(propeller);
         Level.propellers.add(new Propeller(x, y, propeller));
     }
 }

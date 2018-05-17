@@ -1,9 +1,11 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.functionality;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+
+import ozog.development.feistyball.windows.MainMenu;
 
 public class Sensors {
 
@@ -22,7 +24,7 @@ public class Sensors {
         mAccelerometerData = new float[3];
         mMagnetometerData = new float[3];
 
-        sensorManager = (SensorManager)MainMenu.game.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) MainMenu.game.getSystemService(Context.SENSOR_SERVICE);
         mSensorAccelerometer = sensorManager.getDefaultSensor(
                 Sensor.TYPE_ACCELEROMETER);
         mSensorMagnetometer = sensorManager.getDefaultSensor(

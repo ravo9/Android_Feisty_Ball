@@ -1,11 +1,9 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.functionality;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.view.View;
 import android.widget.Toast;
+
+import ozog.development.feistyball.game.elements.Propeller;
+import ozog.development.feistyball.windows.MainMenu;
 
 public class Messages {
 

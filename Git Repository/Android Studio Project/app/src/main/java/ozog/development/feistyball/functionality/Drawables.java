@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.functionality;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 public class Drawables {
 
+    public static Drawable ball;
     public static Drawable brickImageHorizontal;
     public static Drawable greyBrickImageHorizontal;
     public static Drawable brickImageVertical;
@@ -25,6 +26,8 @@ public class Drawables {
         try {
             InputStream stream = game.getAssets().open("brick_h.png");
             brickImageHorizontal = Drawable.createFromStream(stream, null);
+            stream = game.getAssets().open("ball.png");
+            ball = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("grey_brick_h.png");
             greyBrickImageHorizontal = Drawable.createFromStream(stream, null);
             stream = game.getAssets().open("brick_v.png");

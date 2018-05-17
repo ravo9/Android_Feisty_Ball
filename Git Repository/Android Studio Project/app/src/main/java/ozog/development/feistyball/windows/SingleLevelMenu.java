@@ -1,4 +1,4 @@
-package ozog.development.feistyball;
+package ozog.development.feistyball.windows;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
+
+import ozog.development.feistyball.R;
+import ozog.development.feistyball.functionality.Level;
+import ozog.development.feistyball.functionality.Time;
+import ozog.development.feistyball.windows.BestScores;
+import ozog.development.feistyball.windows.MainGame;
+import ozog.development.feistyball.windows.MainMenu;
 
 public class SingleLevelMenu extends AppCompatActivity {
 

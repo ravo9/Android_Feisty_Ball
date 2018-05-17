@@ -5,7 +5,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ozog.development.feistyball.windows.MainGame">
+    tools:context="ozog.development.feistyball.windows.IntroductionScreen">
 
     <FrameLayout
         android:id="@+id/windowLevelComplited"
@@ -24,50 +24,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="115dp"
-            android:text="Level time: 00:00:00"
+            android:text="Use your hands to balance the smartphone and control the ball!"
             android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/btnNextLevel"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btnNewGame"
-            android:layout_alignStart="@+id/windowLevelComplited"
-            android:layout_marginTop="195dp"
-            android:onClick="loadNextLevel"
-            android:text="Next level"
-            android:textColor="@android:color/background_light"
-            tools:backgroundTint="#8bfe85" />
 
         <TextView
             android:id="@+id/levelCompletedTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="Level completed!"
+            android:text="How to play"
             android:textAlignment="center"
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/btnMainMenu"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="295dp"
-            android:backgroundTint="#8bfe85"
-            android:onClick="closeGame"
-            android:text="Main Menu"
-            android:textColor="@android:color/background_light" />
-
-        <Button
-            android:id="@+id/btnRestartLevel"
+            android:id="@+id/btnOk"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="245dp"
             android:onClick="restartLevel"
-            android:text="Restart Level"
+            android:text="OK"
             android:textColor="@android:color/background_light"
             tools:backgroundTint="#8bfe85" />
 
@@ -76,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="150dp"
-            android:text="Total time: 00:00:00"
+            android:text="Switch on all propellers and then achieve the destination point."
             android:textAlignment="center" />
 
     </FrameLayout>
@@ -105,17 +81,6 @@
         android:text="Game: 00:00:00"
         android:textAllCaps="false"
         android:visibility="visible" />
-
-
-    <ImageView
-        android:id="@+id/bell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/bonus01"
-        android:layout_marginBottom="15dp"
-        android:layout_toEndOf="@+id/destination"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/black_ball" />
 
 
 </RelativeLayout>
