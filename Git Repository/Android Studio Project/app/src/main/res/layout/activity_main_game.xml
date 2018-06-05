@@ -107,15 +107,4 @@
         android:visibility="visible" />
 
 
-    <ImageView
-        android:id="@+id/bell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/bonus01"
-        android:layout_marginBottom="15dp"
-        android:layout_toEndOf="@+id/destination"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/black_ball" />
-
-
 </RelativeLayout>

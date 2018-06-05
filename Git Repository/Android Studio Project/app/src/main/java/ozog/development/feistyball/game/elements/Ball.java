@@ -29,8 +29,6 @@ public class Ball {
 
     public static void setBallPosition(float x, float y) {
 
-        //addBall();
-
         ball.setX(x);
         ball.setY(y);
     }

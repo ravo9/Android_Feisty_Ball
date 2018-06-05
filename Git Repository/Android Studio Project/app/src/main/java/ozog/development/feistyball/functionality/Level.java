@@ -120,6 +120,10 @@ public class Level{
 
     public static void loadNextLevel() {
 
+        // Remove previous level elements
+        int unnecessaryElementsAmount = (MainGame.rl.getChildCount() - 3);
+        MainGame.rl.removeViews(3, unnecessaryElementsAmount);
+
         // Prepare the destination
         Destination.addDestination();
 
@@ -557,7 +561,7 @@ public class Level{
         float ballPositionY = (float) (screenHeight * 0.88);
         Ball.setBallPosition(ballPositionX, ballPositionY);
 
-        float destinationPositionX = (float) (screenWidth * 0.284);
+        float destinationPositionX = (float) (screenWidth * 0.575);
         float destinationPositionY = (float) (screenHeight * 0.87);
         Destination.setDestinationPosition(destinationPositionX, destinationPositionY);
 

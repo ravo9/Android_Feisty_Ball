@@ -29,14 +29,15 @@ public class Mechanics {
         buttonFreezer = 0;
         ballRadius = Ball.ballRadius;
         blackHoleRadius = BlackHole.blackHoleRadius;
-        destinationCenterPointX = (int) (Destination.destination.getX() + Destination.destinationLength * 0.5);
-        destinationCenterPointY = (int) (Destination.destination.getY() + Destination.destinationLength * 0.5);
     }
 
     public static void update() {
 
         currentX = Ball.ball.getX();
         currentY = Ball.ball.getY();
+
+        destinationCenterPointX = (int) (Destination.destination.getX() + Destination.destinationLength * 0.5);
+        destinationCenterPointY = (int) (Destination.destination.getY() + Destination.destinationLength * 0.5);
 
         newX = Ball.ball.getX() + Sensors.orientationValues[2] * 7;
         newY = Ball.ball.getY() - Sensors.orientationValues[1] * 7;

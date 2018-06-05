@@ -34,9 +34,19 @@ public class Time {
 
     public static void resetTimers() {
 
-        timer.cancel();
+        ///timer.cancel();
         handler.removeCallbacksAndMessages(null);
         movementHandler.removeCallbacksAndMessages(null);
+
+        // Are the following 4 lines necessary?
+        handler = null;
+        handler = new Handler();
+
+        movementHandler = null;
+        movementHandler = new Handler();
+
+        timer.cancel();
+        timer = null;
     }
 
     public static String displayTime(int time) {
