@@ -132,9 +132,9 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
             AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
 
             TextView myMsg = new TextView(this);
-            myMsg.setText("Your opinion matters! \n\n" +
-                    "Would you like to rate my game?\n\n" +
-                    "Your opinion is the most important feedback for me.\n\n Thank you for your time!");
+            myMsg.setText("Your opinion matters! \n\n\n" +
+                    "Would you like to rate my game?\n\n\n" +
+                    "Thank you for your time!");
             myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
             myMsg.setTextSize(16);
             myMsg.setPadding(35, 90, 35, 90);
@@ -147,6 +147,8 @@ public class MainGame extends AppCompatActivity implements SensorEventListener {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
+
+                    blockFeedbackDisplay();
 
                     // Now close the game
                     finish();

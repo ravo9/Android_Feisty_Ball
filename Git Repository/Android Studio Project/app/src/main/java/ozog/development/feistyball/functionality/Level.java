@@ -202,7 +202,7 @@ public class Level{
                     }
                 });
             }
-        }, 0, 5);
+        }, 0, 6);
     }
 
     public static void restartLevel() {
@@ -230,7 +230,7 @@ public class Level{
 
     public static void fadeGameElementsOut() {
 
-        int animationTime = 2000;
+        int animationTime = 1200;
 
         Ball.ball.animate().alpha(0.0f).setDuration(animationTime);
         Destination.destination.animate().alpha(0.0f).setDuration(animationTime);
